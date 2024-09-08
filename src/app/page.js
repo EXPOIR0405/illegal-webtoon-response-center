@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
@@ -13,8 +13,36 @@ const data = [
   { name: '2022년', 불법사이트피해규모: 7215},
 ]
 
+const supportMessages = [
+  "작가님들 사랑해요",
+  "작가님들 최고",
+  "작가님들 포기하지 말아주세요!",
+  "작가님 응원합니다!",
+  "불법 웹툰 사이트는 이용하지 맙시다",
+  "정식 연재 사이트에서 보는 게 최고예요",
+  "작가님들의 노력에 감사드립니다",
+  "웹툰으로 힘든 시기를 이겨냈어요",
+  "앞으로도 좋은 작품 기대할게요",
+  "창작자의 권리를 존중해요"
+]
+
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [visibleMessages, setVisibleMessages] = useState([])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setVisibleMessages(prevMessages => {
+        const newMessage = supportMessages[Math.floor(Math.random() * supportMessages.length)]
+        const updatedMessages = [...prevMessages, newMessage]
+        if (updatedMessages.length > 4) {
+          updatedMessages.shift()
+        }
+        return updatedMessages
+      })
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white">
@@ -136,6 +164,21 @@ export default function Home() {
             </div>
           </section>
         </div>
+
+        <section className="mt-12 bg-white p-8 rounded-lg shadow-lg relative overflow-hidden">
+          <h2 className="text-3xl font-semibold mb-4 text-blue-600 text-center-8">정식 웹툰, 웹소설 독자들이 보내는 응원 메시지</h2>
+          <div className="flex flex-col items-end space-y-2 h-64 overflow-hidden">
+            {visibleMessages.map((message, index) => (
+              <div
+                key={index}
+                className="bg-blue-500 text-white p-3 rounded-lg max-w-xs animate-slide-up"
+              >
+                <p className="text-sm">{message}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
 
 
         <section className="mt-12 bg-white p-8 rounded-lg shadow-lg relative overflow-hidden">
