@@ -7,10 +7,10 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { AlertCircle, BookOpen, FileText, Users, MessageSquare, Mail, Menu, X } from 'lucide-react'
 
 const data = [
-  { name: '2019', 불법사이트피해규모: 3183},
-  { name: '2020', 불법사이트피해규모: 5488},
-  { name: '2021', 불법사이트피해규모: 8427},
-  { name: '2022', 불법사이트피해규모: 7215},
+  { name: '2019년', 불법사이트피해규모: 3183},
+  { name: '2020년', 불법사이트피해규모: 5488},
+  { name: '2021년', 불법사이트피해규모: 8427},
+  { name: '2022년', 불법사이트피해규모: 7215},
 ]
 
 export default function Home() {
