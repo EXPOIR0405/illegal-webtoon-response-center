@@ -3,5 +3,10 @@
     "paths": {
       "@/*": ["./src/*"]
     }
+    "baseUrl": ".",
+    "jsx": "react-jsx",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "es6"
   }
 }
