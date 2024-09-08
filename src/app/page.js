@@ -6,10 +6,10 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { AlertCircle, BookOpen, FileText, Users, MessageSquare, Mail, Menu, X } from 'lucide-react'
 
 const data = [
-  { name: '2020', 불법사이트수: 100, 합법사이트수: 50 },
-  { name: '2021', 불법사이트수: 120, 합법사이트수: 60 },
-  { name: '2022', 불법사이트수: 140, 합법사이트수: 70 },
-  { name: '2023', 불법사이트수: 160, 합법사이트수: 80 },
+  { name: '2019', 불법사이트피해규모: 3183},
+  { name: '2020', 불법사이트피해규모: 5488},
+  { name: '2021', 불법사이트피해규모: 8427},
+  { name: '2022', 불법사이트피해규모: 7215},
 ]
 
 export default function Home() {
@@ -62,7 +62,7 @@ export default function Home() {
         </section>
 
         <section className="mb-12 bg-white p-8 rounded-lg shadow-lg">
-          <h2 className="text-3xl font-semibold mb-4 text-blue-600">통계</h2>
+          <h2 className="text-3xl font-semibold mb-4 text-blue-600">불법사이트 피해 통계</h2>
           <ResponsiveContainer width="100%" height={400}>
             <BarChart data={data}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -70,10 +70,10 @@ export default function Home() {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="불법사이트수" fill="#8884d8" />
-              <Bar dataKey="합법사이트수" fill="#82ca9d" />
+              <Bar dataKey="불법사이트피해규모" fill="#ff6347" />
             </BarChart>
           </ResponsiveContainer>
+          <p className="text-gray-600 text-sm mt-2 text-right">출처: 한국콘텐츠진흥원</p>
         </section>
 
         <div className="grid md:grid-cols-2 gap-8">
