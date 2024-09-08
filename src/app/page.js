@@ -29,18 +29,23 @@ const supportMessages = [
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [visibleMessages, setVisibleMessages] = useState([])
+  const [isTyping, setIsTyping] = useState(false)
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setVisibleMessages(prevMessages => {
-        const newMessage = supportMessages[Math.floor(Math.random() * supportMessages.length)]
-        const updatedMessages = [...prevMessages, newMessage]
-        if (updatedMessages.length > 4) {
-          updatedMessages.shift()
-        }
-        return updatedMessages
-      })
-    }, 3000)
+      setIsTyping(true)
+      setTimeout(() => {
+        setVisibleMessages(prevMessages => {
+          const newMessage = supportMessages[Math.floor(Math.random() * supportMessages.length)]
+          const updatedMessages = [...prevMessages, newMessage]
+          if (updatedMessages.length > 4) {
+            updatedMessages.shift()
+          }
+          return updatedMessages
+        })
+        setIsTyping(false)
+      }, 1500) // 1.5초 후에 새 메시지 추가
+    }, 5000) // 5초마다 새 메시지 cycle 시작
     return () => clearInterval(interval)
   }, [])
 
@@ -166,7 +171,7 @@ export default function Home() {
         </div>
 
         <section className="mt-12 bg-white p-8 rounded-lg shadow-lg relative overflow-hidden">
-          <h2 className="text-3xl font-semibold mb-4 text-blue-600 text-center-8">정식 웹툰, 웹소설 독자들이 보내는 응원 메시지</h2>
+          <h2 className="text-3xl font-semibold mb-4 text-blue-600">정식 웹툰, 웹소설 독자들이 보내는 응원 메시지</h2>
           <div className="flex flex-col items-end space-y-2 h-64 overflow-hidden">
             {visibleMessages.map((message, index) => (
               <div
@@ -176,9 +181,17 @@ export default function Home() {
                 <p className="text-sm">{message}</p>
               </div>
             ))}
+            {isTyping && (
+              <div className="bg-gray-300 text-gray-600 p-3 rounded-lg max-w-xs animate-slide-up">
+                <p className="text-sm flex items-center">
+                  <span className="w-2 h-2 bg-gray-600 rounded-full mr-1 animate-loading-1"></span>
+                  <span className="w-2 h-2 bg-gray-600 rounded-full mr-1 animate-loading-2"></span>
+                  <span className="w-2 h-2 bg-gray-600 rounded-full animate-loading-3"></span>
+                </p>
+              </div>
+            )}
           </div>
         </section>
-
 
 
         <section className="mt-12 bg-white p-8 rounded-lg shadow-lg relative overflow-hidden">
