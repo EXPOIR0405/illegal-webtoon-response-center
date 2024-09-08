@@ -1,7 +1,8 @@
 'use client'
 
-import Image from 'next/image'
 import { useState } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { AlertCircle, BookOpen, FileText, Users, MessageSquare, Mail, Menu, X } from 'lucide-react'
 
@@ -51,8 +52,8 @@ export default function Home() {
           </div>
           <h2 className="text-3xl font-semibold mb-4 text-blue-600">소개</h2>
           <p className="text-gray-700 text-xl leading-relaxed">
-            불법 웹툰 사이트는 창작자의 권리를 침해하고 웹툰 산업의 발전을 저해합니다. <br />
-            우리 센터는 이러한 문제를 해결하고 건전한 웹툰 생태계를 만들기 위해 노력하고 있습니다. <br />
+            불법 웹툰, 불법 웹소설 사이트는 창작자의 권리를 침해하고 웹툰 산업의 발전을 저해합니다. <br />
+            우리 센터는 이러한 문제를 해결하고 건전한 웹툰, 웹소설 생태계를 만들기 위해 노력하고 있습니다. <br />
             여러분의 참여로 더 나은 웹툰 문화를 만들어갈 수 있습니다.
           </p>
           <ul className="text-l mt-6">
@@ -85,14 +86,10 @@ export default function Home() {
             <h2 className="text-2xl font-semibold mb-4 flex items-center text-red-500">
               <AlertCircle className="mr-2" /> 불법 웹툰 사이트 목록
             </h2>
-            <ul className="list-disc list-inside text-gray-700 mb-4">
-              <li>사이트 A</li>
-              <li>사이트 B</li>
-              <li>사이트 C</li>
-            </ul>
-            <button className="mt-4 bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600 transition duration-300">
+            <p className="text-gray-700 mb-4">불법 웹툰, 불법 웹소설 사이트를 신고하고 건전한 웹툰 문화를 만들어갑시다.</p>
+            <Link href="/report" className="mt-4 bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600 transition duration-300 inline-block">
               사이트 신고하기
-            </button>
+            </Link>
           </section>
 
           <section className="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300 relative overflow-hidden">
@@ -104,7 +101,9 @@ export default function Home() {
               <BookOpen className="mr-2" /> 법적 정보
             </h2>
             <p className="text-gray-700 mb-4">웹툰 저작권법과 불법 사이트 신고 절차에 대한 정보를 확인하세요.</p>
-            <a href="#" className="text-blue-600 hover:underline">자세히 보기 →</a>
+            <Link href="/legal" className="text-blue-600 hover:underline">
+              자세히 보기 →
+            </Link>
           </section>
 
           <section className="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300 relative overflow-hidden">
@@ -116,9 +115,9 @@ export default function Home() {
               <FileText className="mr-2" /> 웹툰 제작자 지원
             </h2>
             <p className="text-gray-700 mb-4">웹툰 제작자를 위한 지원 정보와 협력 기회를 제공합니다.</p>
-            <a href="#" className="bg-purple-500 text-white px-6 py-2 rounded-full hover:bg-purple-600 transition duration-300 inline-block">
+            <Link href="/support" className="bg-purple-500 text-white px-6 py-2 rounded-full hover:bg-purple-600 transition duration-300 inline-block">
               지원 신청하기
-            </a>
+            </Link>
           </section>
 
           <section className="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition duration-300 relative overflow-hidden">
@@ -131,11 +130,13 @@ export default function Home() {
             </h2>
             <p className="text-gray-700 mb-4">의견을 나누고 최신 뉴스를 확인하세요.</p>
             <div className="mt-4 space-x-4">
-              <a href="#" className="bg-yellow-500 text-white px-4 py-2 rounded-full hover:bg-yellow-600 transition duration-300">포럼</a>
-              <a href="#" className="bg-yellow-500 text-white px-4 py-2 rounded-full hover:bg-yellow-600 transition duration-300">블로그</a>
+              <Link href="/community" className="bg-yellow-500 text-white px-4 py-2 rounded-full hover:bg-yellow-600 transition duration-300">
+                커뮤니티 참여하기
+              </Link>
             </div>
           </section>
         </div>
+
 
         <section className="mt-12 bg-white p-8 rounded-lg shadow-lg relative overflow-hidden">
           <div className="absolute top-0 right-0 w-1/3 h-full bg-blue-200 skew-x-12 transform translate-x-1/2 -z-10"></div>
@@ -168,7 +169,7 @@ export default function Home() {
 
       <footer className="bg-blue-800 text-white text-center p-8 mt-12">
         <div className="container mx-auto">
-          <p className="mb-4">&copy; 2024 불법 웹툰 대응 센터. All rights reserved.</p>
+          <p className="mb-4">&copy; 2024 불법 웹툰 웹소설 대응 센터. All rights reserved.</p>
           <div className="flex justify-center space-x-4">
             <a href="#" className="hover:text-blue-300 transition duration-300">개인정보 처리방침</a>
             <a href="#" className="hover:text-blue-300 transition duration-300">이용약관</a>
