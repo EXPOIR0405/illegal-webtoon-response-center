@@ -50,11 +50,15 @@ export default function Home() {
             <Image src="/images/1.jpg" alt="웹툰 작가 일러스트" width={500} height={300} className="rounded-lg shadow-md" />
           </div>
           <h2 className="text-3xl font-semibold mb-4 text-blue-600">소개</h2>
-          <p className="text-gray-700 leading-relaxed">
-            불법 웹툰 사이트는 창작자의 권리를 침해하고 웹툰 산업의 발전을 저해합니다. 
-            우리 센터는 이러한 문제를 해결하고 건전한 웹툰 생태계를 만들기 위해 노력하고 있습니다.
+          <p className="text-gray-700 text-xl leading-relaxed">
+            불법 웹툰 사이트는 창작자의 권리를 침해하고 웹툰 산업의 발전을 저해합니다. <br />
+            우리 센터는 이러한 문제를 해결하고 건전한 웹툰 생태계를 만들기 위해 노력하고 있습니다. <br />
             여러분의 참여로 더 나은 웹툰 문화를 만들어갈 수 있습니다.
           </p>
+          <ul className="text-l mt-6">
+            진행한 프로젝트 <br />
+            2024.08.30~2024.09.08 <a href="https://www.wavvetoon4.com/" className="text-blue-500 underline">베드로 프로젝트</a>(불법 웹툰 유통사의 크론 사이트 제작)
+          </ul>
         </section>
 
         <section className="mb-12 bg-white p-8 rounded-lg shadow-lg">
@@ -139,15 +143,26 @@ export default function Home() {
             <Image src="/images/2.png" alt="고객 지원" width={400} height={300} className="rounded-lg shadow-md" />
           </div>
           <h2 className="text-3xl font-semibold mb-4 flex items-center text-blue-600">
-            <MessageSquare className="mr-2" /> 문의하기
-          </h2>
-          <p className="text-gray-700 mb-4">궁금한 점이 있으시면 언제든 문의해 주세요.</p>
-          <div className="flex items-center bg-blue-100 p-4 rounded-lg inline-block">
-            <Mail className="mr-2 text-blue-600" />
-            <a href="mailto:rkdalswjd0405@gmail.com" className="text-blue-600 hover:underline">rkdalswjd0405@gmail.com</a>
+          <MessageSquare className="mr-2" /> 문의하기
+        </h2>
+        <p className="text-gray-700 mb-4">궁금한 점이 있으시면 언제든 문의해 주세요.</p>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center bg-blue-100 p-4 rounded-lg">
+          <Mail className="mr-2 text-blue-600 mb-2 sm:mb-0" />
+          <a href="mailto:rkdalswjd0405@gmail.com" className="text-blue-600 hover:underline break-all">rkdalswjd0405@gmail.com</a>
           </div>
-          <p className="text-gray-700 mb-4 mt-4">개발자 소개</p>
-          <p className="text-gray-700 mb-4">안녕하세요. 불법 웹툰 사이트 문제를 해결하고자 자발적으로 시작한 1인 프로젝트입니다. 보다 깨끗한 웹툰 환경을 위해 많은 관심과 이용 부탁드립니다. 감사합니다.</p>
+          <p className="text-gray-700 mb-4 mt-4 text-xl font-bold">지나가던 개발자 소개</p>
+          <p className="text-gray-700 mb-4">
+            정부 기관이 할 수 없다면, 제가 해야죠. 지나가던 개발자가 나섭니다! <br />
+            불법 웹툰을 막는 진짜 방법은 사이트 셧다운이 아니라, 여러분의 클릭을 멈추는 겁니다! <br />
+            함께 깨끗한 웹툰, 웹소설 세상을 만들어봐요! <br />
+          </p>
+
+          <p className="text-gray-800 mb-4 mt-4 text-xl font-bold">끝으로, 작가님들께</p>
+          <p className="text-gray-700 mb-4">
+            제가 좋아하는 웹툰, 소설 많이 창작해주시고, 돈 많이 버세요! <br />
+            작가님들 건강도 꼭 챙기시고요. 감사합니다! <br />
+          </p>
+
         </section>
       </main>
 
