@@ -19,6 +19,9 @@ export default function CommunityPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-100 to-white p-8">
       <h1 className="text-3xl font-bold text-purple-600 mb-8 flex items-center">
+        <Link href="/" className="mr-4 hover:text-purple-700 transition duration-300">
+          <ArrowLeft />
+        </Link>
         <MessageSquare className="mr-2" />
         웹툰 커뮤니티
       </h1>

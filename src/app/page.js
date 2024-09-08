@@ -23,9 +23,9 @@ export default function Home() {
           <h1 className="text-3xl font-bold">불법 웹툰 웹소설 대응 센터</h1>
           <nav className="hidden md:flex space-x-4">
             <a href="#" className="hover:text-blue-200 transition duration-300">홈</a>
-            <a href="#" className="hover:text-blue-200 transition duration-300">커뮤니티</a>
-            <a href="#" className="hover:text-blue-200 transition duration-300">문의하기</a>
-            <a href="#" className="hover:text-blue-200 transition duration-300">웹툰 작가 지원</a>
+            <Link href="/community" className="hover:text-blue-200 transition duration-300">커뮤니티</Link>
+            <Link href="/email" className="hover:text-blue-200 transition duration-300">문의하기</Link>
+            <Link href="/support" className="hover:text-blue-200 transition duration-300">웹툰 작가 지원</Link>
           </nav>
           <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
             {isMenuOpen ? <X /> : <Menu />}
@@ -37,9 +37,9 @@ export default function Home() {
         <div className="fixed inset-0 bg-blue-600 z-40 md:hidden">
           <div className="flex flex-col items-center justify-center h-full space-y-8 text-white text-2xl">
             <a href="#" className="hover:text-blue-200 transition duration-300">홈</a>
-            <a href="#" className="hover:text-blue-200 transition duration-300">커뮤니티</a>
-            <a href="#" className="hover:text-blue-200 transition duration-300">문의하기</a>
-            <a href="#" className="hover:text-blue-200 transition duration-300">웹툰 작가 지원</a>
+            <Link href="/community" className="hover:text-blue-200 transition duration-300">커뮤니티</Link>
+            <Link href="/email" className="hover:text-blue-200 transition duration-300">문의하기</Link>
+            <Link href="/support" className="hover:text-blue-200 transition duration-300">웹툰 작가 지원</Link>
           </div>
         </div>
       )}
@@ -53,8 +53,8 @@ export default function Home() {
           <h2 className="text-3xl font-semibold mb-4 text-blue-600">소개</h2>
           <p className="text-gray-700 text-xl leading-relaxed">
             불법 웹툰, 불법 웹소설 사이트는 창작자의 권리를 침해하고 웹툰 산업의 발전을 저해합니다. <br />
-            우리 센터는 이러한 문제를 해결하고 건전한 웹툰, 웹소설 생태계를 만들기 위해 노력하고 있습니다. <br />
-            여러분의 참여로 더 나은 웹툰 문화를 만들어갈 수 있습니다.
+            저희 센터(사실상 1인 프로젝트지만)는 이러한 문제를 해결하고 건전한 웹툰, 웹소설 생태계를 만들기 위해 노력하고 있습니다. <br />
+            여러분의 참여로 더 나은 웹툰 문화를 만들어갈 수 있습니다. 함께 해주세요!
           </p>
           <ul className="text-l mt-6">
             진행한 프로젝트 <br />
@@ -63,7 +63,7 @@ export default function Home() {
         </section>
 
         <section className="mb-12 bg-white p-8 rounded-lg shadow-lg">
-          <h2 className="text-3xl font-semibold mb-4 text-blue-600">불법사이트 피해 통계</h2>
+          <h2 className="text-3xl font-semibold mb-4 text-red-600">불법사이트 피해 통계</h2>
           <ResponsiveContainer width="100%" height={400}>
             <BarChart data={data}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -84,9 +84,9 @@ export default function Home() {
               <Image src="/placeholder-image.jpg" alt="불법 웹툰 사이트 경고" width={300} height={200} className="rounded-lg shadow-sm" />
             </div>
             <h2 className="text-2xl font-semibold mb-4 flex items-center text-red-500">
-              <AlertCircle className="mr-2" /> 불법 웹툰 사이트 목록
+              <AlertCircle className="mr-2" /> 불법 웹툰/웹소설 사이트를 발견하셨다면?
             </h2>
-            <p className="text-gray-700 mb-4">불법 웹툰, 불법 웹소설 사이트를 신고하고 건전한 웹툰 문화를 만들어갑시다.</p>
+            <p className="text-gray-700 mb-4">불법 웹툰, 불법 웹소설 사이트를 신고하고 포상금 받아가세요!</p>
             <Link href="/report" className="mt-4 bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600 transition duration-300 inline-block">
               사이트 신고하기
             </Link>
@@ -98,7 +98,7 @@ export default function Home() {
               <Image src="/placeholder-image.jpg" alt="법률 문서" width={300} height={200} className="rounded-lg shadow-sm" />
             </div>
             <h2 className="text-2xl font-semibold mb-4 flex items-center text-green-600">
-              <BookOpen className="mr-2" /> 법적 정보
+              <BookOpen className="mr-2" /> 법률 권리를 지키시고 싶다면?
             </h2>
             <p className="text-gray-700 mb-4">웹툰 저작권법과 불법 사이트 신고 절차에 대한 정보를 확인하세요.</p>
             <Link href="/legal" className="text-blue-600 hover:underline">
@@ -114,7 +114,7 @@ export default function Home() {
             <h2 className="text-2xl font-semibold mb-4 flex items-center text-purple-600">
               <FileText className="mr-2" /> 웹툰 제작자 지원
             </h2>
-            <p className="text-gray-700 mb-4">웹툰 제작자를 위한 지원 정보와 협력 기회를 제공합니다.</p>
+            <p className="text-gray-700 mb-4">웹툰 제작자를 위한 지원 정보를 공유합니다.</p>
             <Link href="/support" className="bg-purple-500 text-white px-6 py-2 rounded-full hover:bg-purple-600 transition duration-300 inline-block">
               지원 신청하기
             </Link>
@@ -128,7 +128,7 @@ export default function Home() {
             <h2 className="text-2xl font-semibold mb-4 flex items-center text-yellow-600">
               <Users className="mr-2" /> 커뮤니티
             </h2>
-            <p className="text-gray-700 mb-4">의견을 나누고 최신 뉴스를 확인하세요.</p>
+            <p className="text-gray-700 mb-4">웹툰, 웹소설 창작자 여러분들의 자유로운 의견 공유 및 소통 공간입니다.</p>
             <div className="mt-4 space-x-4">
               <Link href="/community" className="bg-yellow-500 text-white px-4 py-2 rounded-full hover:bg-yellow-600 transition duration-300">
                 커뮤니티 참여하기
@@ -146,7 +146,7 @@ export default function Home() {
           <h2 className="text-3xl font-semibold mb-4 flex items-center text-blue-600">
           <MessageSquare className="mr-2" /> 문의하기
         </h2>
-        <p className="text-gray-700 mb-4">궁금한 점이 있으시면 언제든 문의해 주세요.</p>
+        <p className="text-gray-700 mb-4">개발자에게 궁금한 점이 있으시면 언제든 문의해 주세요.</p>
         <div className="flex flex-col sm:flex-row items-start sm:items-center bg-blue-100 p-4 rounded-lg">
           <Mail className="mr-2 text-blue-600 mb-2 sm:mb-0" />
           <a href="mailto:rkdalswjd0405@gmail.com" className="text-blue-600 hover:underline break-all">rkdalswjd0405@gmail.com</a>
@@ -158,7 +158,7 @@ export default function Home() {
             함께 깨끗한 웹툰, 웹소설 세상을 만들어봐요! <br />
           </p>
 
-          <p className="text-gray-800 mb-4 mt-4 text-xl font-bold">끝으로, 작가님들께</p>
+          <p className="text-gray-800 mb-4 mt-4 text-xl font-bold">작가님들께</p>
           <p className="text-gray-700 mb-4">
             제가 좋아하는 웹툰, 소설 많이 창작해주시고, 돈 많이 버세요! <br />
             작가님들 건강도 꼭 챙기시고요. 감사합니다! <br />

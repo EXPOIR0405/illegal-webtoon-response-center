@@ -1,6 +1,7 @@
 'use client'
 
-import { Palette, DollarSign, Users, Lightbulb, ArrowRight } from 'lucide-react'
+import Link from 'next/link'
+import { Palette, DollarSign, Users, Lightbulb, ArrowLeft, ArrowRight } from 'lucide-react'
 
 const supportPrograms = [
   {
@@ -32,8 +33,12 @@ const supportPrograms = [
 export default function SupportPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-100 to-white p-8">
-      <h1 className="text-3xl font-bold text-indigo-600 mb-8">웹툰 제작자 지원 프로그램</h1>
-      
+      <h1 className="text-3xl font-bold text-indigo-600 mb-8 flex items-center">
+        <Link href="/" className="mr-4 hover:text-indigo-700 transition duration-300">
+          <ArrowLeft />
+        </Link>
+        웹툰 제작자 지원 프로그램
+      </h1>
       <div className="grid md:grid-cols-2 gap-8">
         {supportPrograms.map((program, index) => (
           <div key={index} className={`${program.color} rounded-lg shadow-lg p-6 transform transition duration-300 hover:scale-105`}>

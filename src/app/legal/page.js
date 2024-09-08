@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Book, ChevronDown, ChevronUp } from 'lucide-react'
+import { Book, ChevronDown, ChevronUp, ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 
 const legalSections = [
   {
@@ -28,6 +29,9 @@ export default function LegalPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white p-8">
       <h1 className="text-3xl font-bold text-blue-600 mb-8 flex items-center">
+        <Link href="/" className="mr-4 hover:text-blue-700 transition duration-300">
+          <ArrowLeft />
+        </Link>
         <Book className="mr-2" />
         법적 정보
       </h1>
