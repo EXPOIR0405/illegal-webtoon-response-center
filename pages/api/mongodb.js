@@ -2,17 +2,17 @@ import { MongoClient } from 'mongodb';
 
 const uri = process.env.MONGODB_URI; // 환경 변수에서 MongoDB URI 가져오기
 let client;  // 클라이언트 변수를 전역에서 사용할 수 있게 선언
+let clientPromise; // 연결을 Promise로 처리
 
 if (!client) {
-  client = new MongoClient(uri);  // 클라이언트 인스턴스를 초기화
+  client = new MongoClient(uri);
+  clientPromise = client.connect(); // 클라이언트가 한 번만 연결되게 함
 }
 
 export default async function handler(req, res) {
   try {
-    // MongoDB 연결
-    if (!client.isConnected()) {
-      await client.connect();  // 클라이언트가 연결되지 않은 경우에만 연결
-    }
+    // 이미 연결된 클라이언트 재사용
+    await clientPromise;
 
     const database = client.db('Cluster0');  // 데이터베이스 선택
     const collection = database.collection('testCollection');  // 컬렉션 선택
@@ -26,5 +26,4 @@ export default async function handler(req, res) {
     console.error("MongoDB 연결 실패:", error.message);  // 오류 메시지 출력
     res.status(500).json({ error: 'MongoDB 연결 실패', details: error.message });
   }
-  // finally 블록 제거
 }
