@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -13,6 +13,7 @@ export default function SignUpPage() {
     email: '',
   });
   const [error, setError] = useState('');
+  const [showModal, setShowModal] = useState(false);
   const router = useRouter();
 
   const handleChange = (e) => {
@@ -42,11 +43,15 @@ export default function SignUpPage() {
 
       const data = await response.json();
       console.log('회원가입 성공:', data);
-      router.push('/login'); // 로그인 페이지로 이동
+      setShowModal(true);
     } catch (error) {
       console.error('회원가입 오류:', error);
       setError('회원가입 중 오류가 발생했습니다. 다시 시도해 주세요.');
     }
+  };
+
+  const handleGoToMain = () => {
+    router.push('/');
   };
 
   return (
@@ -122,6 +127,31 @@ export default function SignUpPage() {
           </motion.div>
         )}
       </motion.div>
+      <AnimatePresence>
+        {showModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+          >
+            <motion.div
+              initial={{ y: -50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 50, opacity: 0 }}
+              className="bg-white p-6 rounded-lg shadow-xl"
+            >
+              <h3 className="text-lg font-bold mb-4">회원가입이 완료되었습니다</h3>
+              <button
+                onClick={handleGoToMain}
+                className="w-full bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 transition duration-150 ease-in-out"
+              >
+                메인으로 돌아가기
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
