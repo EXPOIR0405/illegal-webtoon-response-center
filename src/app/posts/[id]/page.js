@@ -1,17 +1,17 @@
 'use client'
-
+import { Eye, MessageCircle, ThumbsUp, Share2, ArrowLeft } from 'lucide-react';
 import { useState, useEffect } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, MessageCircle, Eye, ThumbsUp, Share2 } from 'lucide-react'
 
 export default function PostPage() {
   const [post, setPost] = useState(null)
-  const [comments, setComments] = useState([])
-  const [newComment, setNewComment] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [newComment, setNewComment] = useState('')
+  const [comments, setComments] = useState([])
   const params = useParams()
+  const router = useRouter()
   const { id } = params
 
   useEffect(() => {
@@ -19,18 +19,23 @@ export default function PostPage() {
       setIsLoading(true)
       try {
         const response = await fetch(`/api/posts/${id}`)
+        if (response.status === 404) {
+          router.push('/404') // 404 페이지로 리다이렉트
+          return
+        }
         if (!response.ok) {
-          throw new Error('서버 응답이 올바르지 않습니다.')
+          throw new Error(`HTTP error! status: ${response.status}`)
         }
         const data = await response.json()
         setPost(data)
-        // 댓글 데이터를 가져오는 API 호출 (실제 구현 필요)
-        // const commentsResponse = await fetch(`/api/comments/${id}`)
-        // const commentsData = await commentsResponse.json()
-        // setComments(commentsData)
+        // 여기에서 댓글을 가져오는 로직을 추가할 수 있습니다.
+        // 예: setComments(data.comments)
       } catch (err) {
-        setError('게시글을 불러오는 중 오류가 발생했습니다.')
-        console.error('에러 상세:', err)
+        console.error('Error fetching post:', err)
+        setError(`게시글을 불러오는 중 오류가 발생했습니다: ${err.message}`)
+        if (err.message.includes('500')) {
+          router.push('/500') // 500 페이지로 리다이렉트
+        }
       } finally {
         setIsLoading(false)
       }
@@ -38,7 +43,7 @@ export default function PostPage() {
     if (id) {
       fetchPost()
     }
-  }, [id])
+  }, [id, router])
 
   const handleCommentSubmit = (e) => {
     e.preventDefault()
