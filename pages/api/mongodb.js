@@ -5,7 +5,8 @@ let client;  // 클라이언트 변수를 전역에서 사용할 수 있게 선�
 let clientPromise; // 연결을 Promise로 처리
 
 if (!uri) {
-  throw new Error('MONGODB_URI가 설정되지 않았습니다.');
+  console.error('MONGODB_URI가 설정되지 않았습니다.');
+  throw new Error('MONGODB_URI가 설정되지 않았습니다. 환경 변수를 확인해주세요.');
 }
 
 if (!client) {
