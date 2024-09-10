@@ -10,7 +10,7 @@ if (!client) {
 }
 
 export default async function handler(req, res) {
-  const { id } = req.query;
+  const { id } = req.query;å
 
   try {
     await clientPromise;
