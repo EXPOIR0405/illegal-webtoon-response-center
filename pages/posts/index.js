@@ -27,7 +27,7 @@ export default async function handler(req, res) {
     // 각 게시글에 댓글 개수를 추가
     const postsWithCommentCount = await Promise.all(
       posts.map(async (post) => {
-        const commentsCount = await commentsCollection.countDocuments({ postId: post._id });
+        const commentsCount = await commentsCollection.countDocuments({ postId: post._id.toString() });
         return { ...post, commentsCount }; // 댓글 개수 추가
       })
     );
@@ -37,9 +37,6 @@ export default async function handler(req, res) {
     console.error('게시글 목록을 가져오는 중 오류 발생:', error);
     res.status(500).json({ message: '서버 오류 발생', details: error.message });
   } finally {
-    // 연결 종료
-    if (client) {
-      await client.close();
-    }
+    await client.close(); // 연결 종료
   }
 }
