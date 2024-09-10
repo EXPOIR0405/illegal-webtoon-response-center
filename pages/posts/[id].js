@@ -1,97 +1,33 @@
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { ArrowLeft, MessageSquare, ThumbsUp, Share2 } from 'lucide-react';
-import Link from 'next/link';
+// 예시: /pages/api/posts/[id].js (게시글 가져오는 API)
+import { MongoClient, ObjectId } from 'mongodb';
 
-export default function PostPage() {
-  const [post, setPost] = useState(null);
-  const [comments, setComments] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const router = useRouter();
-  const { id } = router.query;
+const uri = process.env.MONGODB_URI; // MongoDB URI
+let client;
+let clientPromise;
 
-  useEffect(() => {
-    if (!id) return;
+if (!client) {
+  client = new MongoClient(uri);
+  clientPromise = client.connect();
+}
 
-    const fetchPostAndComments = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch(`/api/posts/${id}`);
-        if (!response.ok) {
-          throw new Error('데이터를 불러오는데 실패했습니다.');
-        }
-        const data = await response.json();
-        setPost(data.post);
-        setComments(data.comments);
-      } catch (err) {
-        setError('데이터를 불러오는 중 오류가 발생했습니다.');
-        console.error('에러 상세:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+export default async function handler(req, res) {
+  try {
+    await clientPromise;
+    const { id } = req.query;
 
-    fetchPostAndComments();
-  }, [id]);
+    const database = client.db('communityDB');
+    const collection = database.collection('posts');
 
-  if (isLoading) return <div className="text-center py-10">로딩 중...</div>;
-  if (error) return <div className="text-center py-10 text-red-500">{error}</div>;
-  if (!post) return <div className="text-center py-10">게시글을 찾을 수 없습니다.</div>;
+    // MongoDB에서 게시글 가져오기
+    const post = await collection.findOne({ _id: new ObjectId(id) });
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-100 to-white p-4 sm:p-8">
-      <Link href="/community" className="inline-flex items-center text-purple-600 hover:text-purple-700 mb-6">
-        <ArrowLeft className="mr-2" /> 커뮤니티로 돌아가기
-      </Link>
-      
-      <article className="bg-white rounded-lg shadow-lg p-6 mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-purple-700 mb-4">{post.title}</h1>
-        <div className="flex justify-between items-center text-sm text-gray-500 mb-6">
-          <span>작성자: {post.author}</span>
-          <span>작성일: {new Date(post.createdAt).toLocaleDateString()}</span>
-        </div>
-        <div className="prose max-w-none mb-6" dangerouslySetInnerHTML={{ __html: post.content }} />
-        <div className="flex justify-between items-center">
-          <div className="flex space-x-4">
-            <button className="flex items-center text-gray-500 hover:text-purple-600">
-              <ThumbsUp className="mr-1" /> {post.likes}
-            </button>
-            <button className="flex items-center text-gray-500 hover:text-purple-600">
-              <MessageSquare className="mr-1" /> {comments.length}
-            </button>
-          </div>
-          <button className="flex items-center text-gray-500 hover:text-purple-600">
-            <Share2 className="mr-1" /> 공유하기
-          </button>
-        </div>
-      </article>
+    if (!post) {
+      return res.status(404).json({ message: '게시글을 찾을 수 없습니다.' });
+    }
 
-      <section className="bg-white rounded-lg shadow-lg p-6">
-        <h2 className="text-xl font-semibold text-purple-700 mb-4">댓글 {comments.length}개</h2>
-        {comments.map((comment, index) => (
-          <div key={index} className="border-b border-gray-200 py-4 last:border-b-0">
-            <div className="flex justify-between items-start mb-2">
-              <span className="font-medium">{comment.author}</span>
-              <span className="text-sm text-gray-500">{new Date(comment.createdAt).toLocaleDateString()}</span>
-            </div>
-            <p className="text-gray-700">{comment.content}</p>
-          </div>
-        ))}
-        <form className="mt-6">
-          <textarea 
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-            rows="3"
-            placeholder="댓글을 작성해주세요..."
-          ></textarea>
-          <button 
-            type="submit"
-            className="mt-2 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition duration-300"
-          >
-            댓글 작성
-          </button>
-        </form>
-      </section>
-    </div>
-  );
+    res.status(200).json(post);
+  } catch (error) {
+    console.error('게시글을 가져오는 중 오류 발생:', error);
+    res.status(500).json({ message: '서버 오류 발생', details: error.message });
+  }
 }
