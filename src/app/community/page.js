@@ -101,3 +101,7 @@ export default function CommunityPage() {
     </div>
   )
 }
+
+
+
+//추가
