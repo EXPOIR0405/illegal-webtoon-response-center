@@ -4,12 +4,19 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { Heart, ChevronRight, Send, ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 
 const steps = ['사이트 정보', '증거 자료', '신고자 정보', '검토 및 제출']
 
 export default function ReportPage() {
   const [currentStep, setCurrentStep] = useState(0)
   const [file, setFile] = useState(null)
+  const [url, setUrl] = useState('')
+  const [description, setDescription] = useState('')
+  const [reporterName, setReporterName] = useState('')
+  const [reporterPhone, setReporterPhone] = useState('')
+  const [reporterEmail, setReporterEmail] = useState('')
+  const router = useRouter()
   
   const handleFileChange = (e) => {
     setFile(e.target.files[0])
@@ -17,37 +24,34 @@ export default function ReportPage() {
 
   const handleSubmit = async () => {
     try {
-      // 사용자가 입력한 데이터를 reportData에 저장
       const reportData = {
         url,
         description,
-        evidenceFiles: file ? file.name : null,  // 파일이 있으면 파일 이름
+        evidenceFiles: file ? file.name : null,
         reporterName,
         reporterPhone,
         reporterEmail,
       };
   
-      // 백엔드 API로 POST 요청 보내기
       const response = await fetch('/api/report', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(reportData),  // 데이터를 JSON 형식으로 전송
+        body: JSON.stringify(reportData),
       });
   
-      const result = await response.json();  // 응답을 JSON으로 파싱
-      console.log('응답 결과:', result);  // 응답을 콘솔에 출력해 확인
+      const result = await response.json();
+      console.log('응답 결과:', result);
   
       if (response.ok) {
         console.log('신고가 성공적으로 제출되었습니다.');
-        // 성공 시 페이지를 메인으로 이동
         router.push('/');
       } else {
-        console.error('신고 제출 실패:', result.message);  // 오류 메시지 출력
+        console.error('신고 제출 실패:', result.message);
       }
     } catch (error) {
-      console.error('제출 중 오류 발생:', error);  // 예외 처리
+      console.error('제출 중 오류 발생:', error);
     }
   };
   
@@ -79,10 +83,14 @@ export default function ReportPage() {
               type="text" 
               placeholder="불법 웹툰 사이트 URL" 
               className="w-full p-2 border border-gray-300 rounded mb-4"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
             />
             <textarea 
               placeholder="사이트에 대한 추가 정보" 
               className="w-full p-2 border border-gray-300 rounded h-32 mb-4"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             ></textarea>
           </div>
         )}
@@ -106,17 +114,22 @@ export default function ReportPage() {
               type="text" 
               placeholder="성명" 
               className="w-full p-2 border border-gray-300 rounded mb-4"
+              value={reporterName}
+              onChange={(e) => setReporterName(e.target.value)}
             />
             <input 
               type="tel" 
               placeholder="전화번호" 
               className="w-full p-2 border border-gray-300 rounded mb-4"
+              value={reporterPhone}
+              onChange={(e) => setReporterPhone(e.target.value)}
             />
-
             <input 
               type="email" 
               placeholder="이메일(신고 확인 결과 통지용)" 
               className="w-full p-2 border border-gray-300 rounded mb-4"
+              value={reporterEmail}
+              onChange={(e) => setReporterEmail(e.target.value)}
             />
           </div>
         )}
@@ -128,11 +141,9 @@ export default function ReportPage() {
             <div className="mb-4 flex justify-center">
               <Image src="/images/thanks.png" alt="저작권 보호" width={300} height={200} className="mx-auto" />
             </div>
-            <Link href="/">
-              <button className="px-4 py-2 text-center bg-blue-600 text-white rounded hover:bg-blue-700">
-                메인페이지로
-              </button>
-            </Link>
+            <button onClick={handleSubmit} className="px-4 py-2 text-center bg-blue-600 text-white rounded hover:bg-blue-700">
+              제출하기
+            </button>
           </div>
         )}
         
