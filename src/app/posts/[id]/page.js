@@ -1,7 +1,8 @@
 'use client'
 
 import { Eye, MessageCircle, ThumbsUp, Share2, ArrowLeft } from 'lucide-react';
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
+import DOMPurify from 'dompurify';
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 
@@ -85,7 +86,10 @@ export default function PostPage() {
               <span className="flex items-center mr-4"><Eye className="w-4 h-4 mr-1" /> {post.views}</span>
               <span className="flex items-center"><MessageCircle className="w-4 h-4 mr-1" /> {post.commentsCount || 0}</span>
             </div>
-            <div className="prose max-w-none mb-6">{post.content}</div>
+            <div 
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
+              className="prose max-w-none"  // Tailwind CSS의 Typography 플러그인 사용 시
+            />
             <div className="flex items-center justify-between border-t pt-4">
               <div className="flex space-x-4">
                 <button className="flex items-center text-gray-600 hover:text-blue-600">
