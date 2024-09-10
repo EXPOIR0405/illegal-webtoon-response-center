@@ -1,42 +1,34 @@
-import { MongoClient } from 'mongodb';
+import { useState, useEffect } from 'react';
 
-const uri = process.env.MONGODB_URI;
-let client;
-let clientPromise;
+export default function Posts() {
+  const [posts, setPosts] = useState([]);
 
-if (!uri) {
-  throw new Error('MONGODB_URI가 설정되지 않았습니다.');
-}
+  useEffect(() => {
+    async function fetchPosts() {
+      try {
+        const response = await fetch('/api/posts');
+        if (!response.ok) {
+          throw new Error('서버에서 응답을 받지 못했습니다.');
+        }
+        const data = await response.json();
+        setPosts(data);
+      } catch (error) {
+        console.error('게시글을 불러오는 중 오류 발생:', error);
+      }
+    }
 
-if (!client) {
-  client = new MongoClient(uri);
-  clientPromise = client.connect();
-}
+    fetchPosts();
+  }, []);
 
-export default async function handler(req, res) {
-  try {
-    await clientPromise;
-
-    const database = client.db('communityDB');
-    const postsCollection = database.collection('posts');
-    const commentsCollection = database.collection('comments');
-
-    // 게시글 목록 가져오기
-    const posts = await postsCollection.find({}).toArray();
-
-    // 각 게시글에 댓글 개수를 추가
-    const postsWithCommentCount = await Promise.all(
-      posts.map(async (post) => {
-        const commentsCount = await commentsCollection.countDocuments({ postId: post._id.toString() });
-        return { ...post, commentsCount }; // 댓글 개수 추가
-      })
-    );
-
-    res.status(200).json(postsWithCommentCount);
-  } catch (error) {
-    console.error('게시글 목록을 가져오는 중 오류 발생:', error);
-    res.status(500).json({ message: '서버 오류 발생', details: error.message });
-  } finally {
-    await client.close(); // 연결 종료
-  }
+  return (
+    <div>
+      <h1>게시글 목록</h1>
+      {posts.map((post) => (
+        <div key={post._id}>
+          <h2>{post.title}</h2>
+          <p>댓글 수: {post.commentsCount || 0}</p>
+        </div>
+      ))}
+    </div>
+  );
 }

@@ -39,9 +39,18 @@ export default async function handler(req, res) {
 
       res.status(200).json({ message: '게시글이 성공적으로 등록되었습니다.', result });
     } else if (req.method === 'GET') {
-      // GET 요청 처리 추가
       const posts = await collection.find().sort({ createdAt: -1 }).toArray();
-      res.status(200).json(posts);
+      
+      // 각 게시글에 댓글 개수 추가
+      const commentsCollection = database.collection('comments');
+      const postsWithCommentCount = await Promise.all(
+        posts.map(async (post) => {
+          const commentsCount = await commentsCollection.countDocuments({ postId: post._id.toString() });
+          return { ...post, commentsCount };
+        })
+      );
+      
+      res.status(200).json(postsWithCommentCount);
     } else {
       res.status(405).json({ message: 'POST 또는 GET 요청만 허용됩니다.' });
     }
