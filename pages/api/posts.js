@@ -27,6 +27,16 @@ export default async function handler(req, res) {
         createdAt: new Date(),
       });
 
+      // posts.js API
+      if (req.method === 'GET') {
+        const post = await collection.findOne({ _id: new ObjectId(id) });
+        
+        // 조회수 증가
+        await collection.updateOne({ _id: new ObjectId(id) }, { $inc: { views: 1 } });
+        
+        res.status(200).json(post);
+      }
+
       res.status(200).json({ message: '게시글이 성공적으로 등록되었습니다.', result });
     } else if (req.method === 'GET') {
       // GET 요청 처리 추가
