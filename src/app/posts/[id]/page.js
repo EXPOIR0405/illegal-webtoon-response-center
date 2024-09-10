@@ -1,4 +1,5 @@
 'use client'
+
 import { Eye, MessageCircle, ThumbsUp, Share2, ArrowLeft } from 'lucide-react';
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
@@ -20,21 +21,19 @@ export default function PostPage() {
       try {
         const response = await fetch(`/api/posts/${id}`)
         if (response.status === 404) {
-          router.push('/404') // 404 페이지로 리다이렉트
+          router.push('/404')
           return
         }
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
+          throw new Error(`HTTP 오류! 상태: ${response.status}`)
         }
         const data = await response.json()
         setPost(data)
-        // 여기에서 댓글을 가져오는 로직을 추가할 수 있습니다.
-        // 예: setComments(data.comments)
       } catch (err) {
-        console.error('Error fetching post:', err)
+        console.error('게시글 가져오기 오류:', err)
         setError(`게시글을 불러오는 중 오류가 발생했습니다: ${err.message}`)
         if (err.message.includes('500')) {
-          router.push('/500') // 500 페이지로 리다이렉트
+          router.push('/500')
         }
       } finally {
         setIsLoading(false)
@@ -45,11 +44,26 @@ export default function PostPage() {
     }
   }, [id, router])
 
-  const handleCommentSubmit = (e) => {
+  const handleCommentSubmit = async (e) => {
     e.preventDefault()
-    // 댓글 제출 로직 구현 (API 호출 등)
-    console.log('새 댓글:', newComment)
-    setNewComment('')
+    try {
+      const response = await fetch(`/api/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ postId: id, content: newComment }),
+      })
+      if (!response.ok) {
+        throw new Error('댓글 작성 실패')
+      }
+      const newCommentData = await response.json()
+      setComments([...comments, newCommentData])
+      setNewComment('')
+    } catch (error) {
+      console.error('댓글 작성 오류:', error)
+      alert('댓글 작성에 실패했습니다. 다시 시도해주세요.')
+    }
   }
 
   if (isLoading) return <div className="flex justify-center items-center h-screen">로딩 중...</div>
