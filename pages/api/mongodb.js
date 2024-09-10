@@ -2,19 +2,26 @@ import { MongoClient } from 'mongodb';
 
 const uri = process.env.MONGODB_URI; // 환경 변수에서 MongoDB URI 가져오기
 let client;  // 클라이언트 변수를 전역에서 사용할 수 있게 선언
+let clientPromise; // 연결을 Promise로 처리
 
 if (!uri) {
   throw new Error('MONGODB_URI가 설정되지 않았습니다.');
 }
 
 if (!client) {
-  client = new MongoClient(uri);  // 클라이언트 인스턴스를 초기화
+  client = new MongoClient(uri);
+  clientPromise = client.connect(); // 클라이언트가 한 번만 연결되게 함
 }
 
 export default async function handler(req, res) {
   try {
+<<<<<<< HEAD
     // MongoDB 연결
     await client.connect();  // 연결 시도
+=======
+    // 이미 연결된 클라이언트 재사용
+    await clientPromise;
+>>>>>>> 2903ec6c8d5fb4a0c8b0ee8a4027afed5b3ea54b
 
     const database = client.db('Cluster0');  // 데이터베이스 선택
     const collection = database.collection('testCollection');  // 컬렉션 선택
