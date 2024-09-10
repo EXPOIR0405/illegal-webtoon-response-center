@@ -1,17 +1,19 @@
 'use client'
 
-import React, { useState } from 'react';
-import { ArrowLeft, FileUp } from 'lucide-react';
-import dynamic from 'next/dynamic';
+import { useState } from 'react'
+import { ArrowLeft, FileUp } from 'lucide-react'
+import dynamic from 'next/dynamic'
+import { useRouter } from 'next/navigation'
 
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
-import 'react-quill/dist/quill.snow.css';
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
+import 'react-quill/dist/quill.snow.css'
 
 export default function WritingPage() {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [file, setFile] = useState(null);
-  const [showPopup, setShowPopup] = useState(false);
+  const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
+  const [file, setFile] = useState(null)
+  const [showPopup, setShowPopup] = useState(false)
+  const router = useRouter()
 
   const modules = {
     toolbar: [
@@ -22,11 +24,11 @@ export default function WritingPage() {
       [{ 'align': [] }],
       ['blockquote', 'link', 'image', 'video'],
     ],
-  };
+  }
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
+    setFile(e.target.files[0])
+  }
 
   const handleSubmit = async () => {
     try {
@@ -34,38 +36,38 @@ export default function WritingPage() {
         title,
         content,
         file: file ? file.name : null,
-      };
-  
+      }
+
       const response = await fetch('/api/posts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(postData),
-      });
-  
-      const result = await response.json();
-      console.log('응답 결과:', result);
-  
+      })
+
+      const result = await response.json()
+      console.log('응답 결과:', result)
+
       if (response.ok) {
-        console.log('글이 성공적으로 등록되었습니다.');
-        setShowPopup(true);
-        setTimeout(() => {
-          setShowPopup(false);
-          window.history.back();
-        }, 2000);
+        setShowPopup(true)
       } else {
-        console.error('글 등록 실패:', result.message);
+        console.error('글 등록 실패:', result.message)
       }
     } catch (error) {
-      console.error('등록 중 오류 발생:', error);
+      console.error('등록 중 오류 발생:', error)
     }
-  };
+  }
+
+  const handleConfirm = () => {
+    setShowPopup(false)
+    router.push('/community')
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-100 to-white p-8">
       <h1 className="text-3xl font-bold text-purple-600 mb-8 flex items-center">
-        <ArrowLeft className="mr-4 cursor-pointer" onClick={() => window.history.back()} />
+        <ArrowLeft className="mr-4 cursor-pointer" onClick={() => router.back()} />
         게시글 작성
       </h1>
 
@@ -107,10 +109,16 @@ export default function WritingPage() {
       {showPopup && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg">
-            <p className="text-xl font-bold">글이 등록되었습니다!</p>
+            <p className="text-xl font-bold mb-4">글이 등록되었습니다!</p>
+            <button
+              onClick={handleConfirm}
+              className="bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition duration-300"
+            >
+              확인
+            </button>
           </div>
         </div>
       )}
     </div>
-  );
+  )
 }
