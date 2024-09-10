@@ -15,11 +15,41 @@ export default function ReportPage() {
     setFile(e.target.files[0])
   }
 
-  const handleSubmit = () => {
-    // 여기에 제출 로직을 구현할 예정
-    // 예: API 호출, 상태 업데이트 등
-    console.log('신고가 제출되었습니다.')
-  }
+  const handleSubmit = async () => {
+    try {
+      // 사용자가 입력한 데이터를 reportData에 저장
+      const reportData = {
+        url,
+        description,
+        evidenceFiles: file ? file.name : null,  // 파일이 있으면 파일 이름
+        reporterName,
+        reporterPhone,
+        reporterEmail,
+      };
+  
+      // 백엔드 API로 POST 요청 보내기
+      const response = await fetch('/api/report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reportData),  // 데이터를 JSON 형식으로 전송
+      });
+  
+      const result = await response.json();  // 응답을 JSON으로 파싱
+      console.log('응답 결과:', result);  // 응답을 콘솔에 출력해 확인
+  
+      if (response.ok) {
+        console.log('신고가 성공적으로 제출되었습니다.');
+        // 성공 시 페이지를 메인으로 이동
+        router.push('/');
+      } else {
+        console.error('신고 제출 실패:', result.message);  // 오류 메시지 출력
+      }
+    } catch (error) {
+      console.error('제출 중 오류 발생:', error);  // 예외 처리
+    }
+  };
   
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-100 to-white p-8">
