@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react';
-import { ArrowLeft, Bold, Italic, Underline, StrikeThrough, AlignLeft, AlignCenter, AlignRight, Quote, Link, Image, Youtube, FileUp } from 'lucide-react';
+import { ArrowLeft, FileUp } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
@@ -28,16 +28,38 @@ export default function WritingPage() {
     setFile(e.target.files[0]);
   };
 
-  const handleSubmit = () => {
-    // 여기에 글 등록 로직을 구현하세요
-    console.log('제목:', title);
-    console.log('내용:', content);
-    console.log('첨부 파일:', file);
-    setShowPopup(true);
-    setTimeout(() => {
-      setShowPopup(false);
-      window.history.back();
-    }, 2000);
+  const handleSubmit = async () => {
+    try {
+      const postData = {
+        title,
+        content,
+        file: file ? file.name : null,
+      };
+  
+      const response = await fetch('/api/posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(postData),
+      });
+  
+      const result = await response.json();
+      console.log('응답 결과:', result);
+  
+      if (response.ok) {
+        console.log('글이 성공적으로 등록되었습니다.');
+        setShowPopup(true);
+        setTimeout(() => {
+          setShowPopup(false);
+          window.history.back();
+        }, 2000);
+      } else {
+        console.error('글 등록 실패:', result.message);
+      }
+    } catch (error) {
+      console.error('등록 중 오류 발생:', error);
+    }
   };
 
   return (
