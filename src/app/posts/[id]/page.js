@@ -1,6 +1,6 @@
 'use client'
 
-import { Eye, MessageCircle, ThumbsUp, Share2, ArrowLeft } from 'lucide-react';
+import { Eye, MessageCircle, ThumbsUp, Share2, ArrowLeft, Link as LinkIcon } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import DOMPurify from 'dompurify';
 import { useParams, useRouter } from 'next/navigation'
@@ -12,6 +12,8 @@ export default function PostPage() {
   const [error, setError] = useState(null)
   const [newComment, setNewComment] = useState('')
   const [comments, setComments] = useState([])
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false)
+  const [isLiked, setIsLiked] = useState(false)
   const params = useParams()
   const router = useRouter()
   const { id } = params
@@ -67,35 +69,51 @@ export default function PostPage() {
     }
   }
 
+  const handleShare = () => {
+    setIsShareModalOpen(true)
+    navigator.clipboard.writeText(window.location.href)
+    setTimeout(() => setIsShareModalOpen(false), 2000)
+  }
+
+  const handleLike = () => {
+    setIsLiked(!isLiked)
+  }
+
   if (isLoading) return <div className="flex justify-center items-center h-screen">로딩 중...</div>
   if (error) return <div className="p-4 text-red-500 text-center">{error}</div>
   if (!post) return <div className="p-4 text-center">게시글을 찾을 수 없습니다.</div>
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
       <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <Link href="/community" className="inline-flex items-center text-gray-600 hover:text-gray-800 mb-6">
+        <Link href="/community" className="inline-flex items-center text-purple-600 hover:text-purple-800 mb-6 transition duration-300">
           <ArrowLeft className="w-5 h-5 mr-2" />
           커뮤니티로 돌아가기
         </Link>
-        <article className="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="p-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">{post.title}</h1>
-            <div className="flex items-center text-sm text-gray-500 mb-4">
-              <span className="mr-4">작성자: {post.author}</span>
+        <article className="bg-white rounded-xl shadow-lg overflow-hidden transition-shadow duration-300 hover:shadow-xl">
+          <div className="p-8">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">{post.title}</h1>
+            <div className="flex items-center text-sm text-gray-500 mb-6">
+              <span className="mr-4 bg-purple-100 px-3 py-1 rounded-full">작성자: {post.author}</span>
               <span className="flex items-center mr-4"><Eye className="w-4 h-4 mr-1" /> {post.views}</span>
               <span className="flex items-center"><MessageCircle className="w-4 h-4 mr-1" /> {post.commentsCount || 0}</span>
             </div>
             <div 
               dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
-              className="prose max-w-none"  // Tailwind CSS의 Typography 플러그인 사용 시
+              className="prose max-w-none mb-6"
             />
             <div className="flex items-center justify-between border-t pt-4">
               <div className="flex space-x-4">
-                <button className="flex items-center text-gray-600 hover:text-blue-600">
-                  <ThumbsUp className="w-5 h-5 mr-1" /> 좋아요
+                <button 
+                  onClick={handleLike}
+                  className={`flex items-center transition duration-300 ${
+                    isLiked ? 'text-purple-600 bg-purple-100' : 'text-gray-600 hover:text-purple-600'
+                  } px-3 py-1 rounded-full`}
+                >
+                  <ThumbsUp className={`w-5 h-5 mr-1 ${isLiked ? 'fill-current' : ''}`} />
+                  좋아요
                 </button>
-                <button className="flex items-center text-gray-600 hover:text-green-600">
+                <button onClick={handleShare} className="flex items-center text-green-600 hover:text-green-800 transition duration-300">
                   <Share2 className="w-5 h-5 mr-1" /> 공유하기
                 </button>
               </div>
@@ -103,11 +121,11 @@ export default function PostPage() {
           </div>
         </article>
 
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">댓글</h2>
-          <form onSubmit={handleCommentSubmit} className="mb-6">
+        <div className="mt-12">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">댓글</h2>
+          <form onSubmit={handleCommentSubmit} className="mb-8">
             <textarea
-              className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
+              className="w-full px-4 py-3 text-gray-700 border border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-300"
               rows="4"
               placeholder="댓글을 작성해주세요..."
               value={newComment}
@@ -115,24 +133,29 @@ export default function PostPage() {
             ></textarea>
             <button
               type="submit"
-              className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+              className="mt-3 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition duration-300"
             >
               댓글 작성
             </button>
           </form>
-          <div className="space-y-4">
+          <div className="space-y-6">
             {comments.map((comment, index) => (
-              <div key={index} className="bg-white rounded-lg shadow p-4">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="font-semibold">{comment.author}</span>
+              <div key={index} className="bg-white rounded-lg shadow-md p-6 transition-shadow duration-300 hover:shadow-lg">
+                <div className="flex justify-between items-center mb-3">
+                  <span className="font-semibold text-purple-600">{comment.author}</span>
                   <span className="text-sm text-gray-500">{comment.date}</span>
                 </div>
-                <p>{comment.content}</p>
+                <p className="text-gray-700">{comment.content}</p>
               </div>
             ))}
           </div>
         </div>
       </div>
+      {isShareModalOpen && (
+        <div className="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg">
+          링크가 클립보드에 복사되었습니다!
+        </div>
+      )}
     </div>
   )
 }
