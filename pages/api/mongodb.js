@@ -15,13 +15,8 @@ if (!client) {
 
 export default async function handler(req, res) {
   try {
-<<<<<<< HEAD
     // MongoDB 연결
-    await client.connect();  // 연결 시도
-=======
-    // 이미 연결된 클라이언트 재사용
     await clientPromise;
->>>>>>> 2903ec6c8d5fb4a0c8b0ee8a4027afed5b3ea54b
 
     const database = client.db('Cluster0');  // 데이터베이스 선택
     const collection = database.collection('testCollection');  // 컬렉션 선택
