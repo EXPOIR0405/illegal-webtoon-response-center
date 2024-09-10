@@ -10,6 +10,25 @@ export default function CommunityPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  // 예시: 커뮤니티 페이지에서 각 게시글에 링크 추가
+  const topicList = (
+    <ul className="space-y-3 sm:space-y-4">
+      {recentTopics.map((topic, index) => (
+        <li key={index} className="border-b border-purple-100 pb-3 sm:pb-4 last:border-b-0">
+          <Link href={`/posts/${topic._id}`}>
+            <div className="block hover:bg-purple-50 rounded p-2 transition duration-300">
+              <h3 className="font-semibold text-base sm:text-lg text-purple-700">{topic.title}</h3>
+              <div className="flex justify-between text-xs sm:text-sm text-purple-500 mt-1 sm:mt-2">
+                <span>작성자: {topic.author}</span>
+                <span>댓글: {topic.replies} | 조회: {topic.views}</span>
+              </div>
+            </div>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  )
+
   // 백엔드에서 최근 글 목록 가져오기
   useEffect(() => {
     const fetchTopics = async () => {
@@ -64,22 +83,10 @@ export default function CommunityPage() {
             </div>
 
             {/* 최근 토픽 목록 */}
-            <ul className="space-y-3 sm:space-y-4">
-              {isLoading && <p>로딩 중...</p>}
-              {error && <p className="text-red-500">{error}</p>}
-              {!isLoading && !error && recentTopics.length === 0 && <p>아직 게시글이 없습니다.</p>}
-              {recentTopics.map((topic, index) => (
-                <li key={index} className="border-b border-purple-100 pb-3 sm:pb-4 last:border-b-0">
-                  <a href="#" className="block hover:bg-purple-50 rounded p-2 transition duration-300">
-                    <h3 className="font-semibold text-base sm:text-lg text-purple-700">{topic.title}</h3>
-                    <div className="flex justify-between text-xs sm:text-sm text-purple-500 mt-1 sm:mt-2">
-                      <span>작성자: {topic.author}</span>
-                      <span>댓글: {topic.replies} | 조회: {topic.views}</span>
-                    </div>
-                  </a>
-                </li>
-              ))}
-            </ul>
+            {isLoading && <p>로딩 중...</p>}
+            {error && <p className="text-red-500">{error}</p>}
+            {!isLoading && !error && recentTopics.length === 0 && <p>아직 게시글이 없습니다.</p>}
+            {!isLoading && !error && recentTopics.length > 0 && topicList}
 
             <Link href="/writing" className="mt-4 sm:mt-6 w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-300 text-center block text-sm sm:text-base">
               새 토픽 작성하기
