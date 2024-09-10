@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 
-const uri = process.env.MONGODB_URI; // 환경변수에서 MongoDB URI 가져오기
+const uri = process.env.MONGODB_URI; // 기존의 MONGODB_URI를 그대로 사용
 let client;
 let clientPromise;
 
@@ -40,5 +40,8 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('MongoDB 연결 실패:', error.message);
     res.status(500).json({ error: 'MongoDB 연결 실패', details: error.message });
+  } finally {
+    // 연결 종료
+    await client.close();
   }
 }
