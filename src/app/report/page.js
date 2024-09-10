@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { useRouter } from 'next/router' // 페이지 이동을 위한 useRouter
+import { useRouter } from 'next/navigation' // next/navigation에서 useRouter 임포트
 import { Heart, ChevronRight, Send, ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
 
