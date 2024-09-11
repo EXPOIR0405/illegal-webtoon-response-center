@@ -1,4 +1,26 @@
 import { MongoClient } from 'mongodb';
+import bcrypt from 'bcrypt';
+import dbConnect from '../../utils/dbConnect'; // 경로 수정
+import User from '../../models/User'; // 경로 수정
+import Cors from 'cors';
+
+// CORS 미들웨어 초기화
+const cors = Cors({
+  methods: ['POST', 'GET', 'HEAD'],
+  origin: '*', // 모든 출처 허용 (보안상 주의 필요)
+});
+
+// CORS 미들웨어를 사용하여 API 핸들러를 감싸는 함수
+function runMiddleware(req, res, fn) {
+  return new Promise((resolve, reject) => {
+    fn(req, res, (result) => {
+      if (result instanceof Error) {
+        return reject(result);
+      }
+      return resolve(result);
+    });
+  });
+}
 
 const uri = process.env.MONGODB_URI;
 let client;
@@ -20,32 +42,40 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export default async function handler(req, res) {
-  try {
-    const client = await clientPromise;
-    const database = client.db('userDB');
-    const collection = database.collection('users');
+  await runMiddleware(req, res, cors); // CORS 미들웨어 실행
 
-    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  await dbConnect(); // 데이터베이스 연결
 
-    if (req.method === 'POST') {
-      const { name, nickname, age, gender, email } = req.body;
+  if (req.method === 'POST') {
+    const { name, nickname, age, gender, email, password } = req.body;
 
-      const result = await collection.insertOne({
-        name,
-        nickname,
-        age,
-        gender,
-        email,
-        ip: ip || 'IP 불명',
-        signupDate: new Date(),
-      });
-
-      res.status(200).json({ message: '회원가입 성공!', result });
-    } else {
-      res.status(405).json({ message: 'POST 요청만 허용됩니다.' });
+    // 필드 유효성 검사
+    if (!name || !nickname || !age || !gender || !email || !password) {
+      return res.status(400).json({ error: '모든 필드를 입력해야 합니다.' });
     }
-  } catch (error) {
-    console.error('MongoDB 저장 실패:', error);
-    res.status(500).json({ error: 'MongoDB 저장 실패', details: error.message });
+
+    // 비밀번호 해싱
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // 사용자 생성
+    const newUser = new User({
+      name,
+      nickname,
+      age,
+      gender,
+      email,
+      password: hashedPassword, // 해싱된 비밀번호 저장
+    });
+
+    try {
+      await newUser.save(); // 사용자 저장
+      res.status(201).json({ message: '회원가입 성공' });
+    } catch (error) {
+      console.error('회원가입 오류:', error); // 추가된 로그
+      res.status(400).json({ error: '회원가입 중 오류가 발생했습니다.' });
+    }
+  } else {
+    res.setHeader('Allow', ['POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }

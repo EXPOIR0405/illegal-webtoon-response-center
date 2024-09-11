@@ -11,6 +11,7 @@ export default function SignUpPage() {
     age: '',
     gender: '',
     email: '',
+    password: '', // 비밀번호 필드 추가
   });
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
@@ -72,13 +73,13 @@ export default function SignUpPage() {
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
-            {['name', 'nickname', 'age', 'email'].map((field, index) => (
+            {['name', 'nickname', 'age', 'email', 'password'].map((field, index) => (
               <div key={field}>
                 <label htmlFor={field} className="sr-only">{field}</label>
                 <input
                   id={field}
                   name={field}
-                  type={field === 'age' ? 'number' : field === 'email' ? 'email' : 'text'}
+                  type={field === 'age' ? 'number' : field === 'email' ? 'email' : field === 'password' ? 'password' : 'text'} // 비밀번호 입력 타입 설정
                   required
                   className={`appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm ${
                     index === 0 ? 'rounded-t-md' : index === 3 ? 'rounded-b-md' : ''
