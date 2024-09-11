@@ -17,10 +17,12 @@ export default function CommunityPage() {
         <li key={index} className="border-b border-purple-100 pb-3 sm:pb-4 last:border-b-0">
           <Link href={`/posts/${topic._id}`}>
             <div className="block hover:bg-purple-50 rounded p-2 transition duration-300">
-              <h3 className="font-semibold text-base sm:text-lg text-purple-700">{topic.title}</h3>
+              <h3 className="font-semibold text-base sm:text-lg text-purple-700">
+                {topic.title} [- {topic.replies}]
+              </h3>
               <div className="flex justify-between text-xs sm:text-sm text-purple-500 mt-1 sm:mt-2">
-                <span>작성자: {topic.author}</span>
-                <span>댓글: {topic.replies} | 조회: {topic.views}</span>
+                <span>번호: {topic.number} | 분류: {topic.category}</span>
+                <span>작성자: {topic.author} | 날짜: {new Date(topic.date).toLocaleDateString()} | 조회: {topic.views}</span>
               </div>
             </div>
           </Link>

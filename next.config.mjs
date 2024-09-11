@@ -1,4 +1,8 @@
 /** @type {import('next').NextConfig} */
+import { config } from 'dotenv';
+
+config(); // .env 파일에서 환경 변수 로드
+
 const nextConfig = {
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -16,5 +20,8 @@ const nextConfig = {
     return config;
   },
 };
-
-export default nextConfig;
+export default {
+  env: {
+    MONGODB_URI: process.env.MONGODB_URI,
+  },
+};

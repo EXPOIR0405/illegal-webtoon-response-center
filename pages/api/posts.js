@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 
-const uri = process.env.MONGODB_URI;
+const uri = process.env.MONGODB_URI; // 환경 변수에서 가져오는 경우
 let client;
 let clientPromise;
 
