@@ -18,7 +18,7 @@ export default function CommunityPage() {
           <Link href={`/posts/${topic._id}`}>
             <div className="block hover:bg-purple-50 rounded p-2 transition duration-300">
               <h3 className="font-semibold text-base sm:text-lg text-purple-700">
-                {topic.title} [- {topic.replies}]
+                {topic.title}{topic.replies > 0 ? ` [- ${topic.replies}]` : ''}
               </h3>
               <div className="flex justify-between text-xs sm:text-sm text-purple-500 mt-1 sm:mt-2">
                 <span>번호: {topic.number} | 분류: {topic.category}</span>
