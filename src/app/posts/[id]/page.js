@@ -20,52 +20,76 @@ export default function PostPage() {
 
   useEffect(() => {
     const fetchPost = async () => {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
-        const response = await fetch(`/api/posts/${id}`)
+        const response = await fetch(`/api/posts/${id}`);
         if (response.status === 404) {
-          router.push('/404')
-          return
+          router.push('/404');
+          return;
         }
         if (!response.ok) {
-          throw new Error(`HTTP 오류! 상태: ${response.status}`)
+          throw new Error(`HTTP 오류! 상태: ${response.status}`);
         }
-        const data = await response.json()
-        setPost(data)
+        const data = await response.json();
+        setPost(data);
+
+        // 댓글 가져오기
+        const commentsResponse = await fetch(`/api/comments?postId=${id}`); // GET 요청
+        if (!commentsResponse.ok) {
+          throw new Error('댓글 가져오기 실패');
+        }
+        const commentsData = await commentsResponse.json();
+        setComments(commentsData);
       } catch (err) {
-        console.error('게시글 가져오기 오류:', err)
-        setError(`게시글을 불러오는 중 오류가 발생했습니다: ${err.message}`)
+        console.error('게시글 가져오기 오류:', err);
+        setError(`게시글을 불러오는 중 오류가 발생했습니다: ${err.message}`);
         if (err.message.includes('500')) {
-          router.push('/500')
+          router.push('/500');
         }
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
     if (id) {
-      fetchPost()
+      fetchPost();
     }
-  }, [id, router])
+  }, [id, router]);
 
   const handleCommentSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       const response = await fetch(`/api/comments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ postId: id, content: newComment }),
-      })
+        body: JSON.stringify({ userId: '사용자 ID', postId: id, comment: newComment }), // userId 추가
+      });
       if (!response.ok) {
-        throw new Error('댓글 작성 실패')
+        throw new Error('댓글 작성 실패');
       }
-      const newCommentData = await response.json()
-      setComments([...comments, newCommentData])
-      setNewComment('')
+      const newCommentData = await response.json();
+      setComments([...comments, newCommentData]);
+      setNewComment('');
     } catch (error) {
-      console.error('댓글 작성 오류:', error)
-      alert('댓글 작성에 실패했습니다. 다시 시도해주세요.')
+      console.error('댓글 작성 오류:', error);
+      alert('댓글 작성에 실패했습니다. 다시 시도해주세요.');
+    }
+  }
+
+  // 댓글 삭제 핸들러 추가
+  const handleCommentDelete = async (commentId) => {
+    try {
+      const response = await fetch(`/api/comments?id=${commentId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('댓글 삭제 실패');
+      }
+      setComments(comments.filter(comment => comment._id !== commentId)); // 댓글 목록에서 삭제
+    } catch (error) {
+      console.error('댓글 삭제 오류:', error);
+      alert('댓글 삭제에 실패했습니다. 다시 시도해주세요.');
     }
   }
 
@@ -127,7 +151,7 @@ export default function PostPage() {
             <textarea
               className="w-full px-4 py-3 text-gray-700 border border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-300"
               rows="4"
-              placeholder="댓글을 작성해주세요..."
+              placeholder="댓글을 작해주세요..."
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
             ></textarea>
@@ -139,13 +163,14 @@ export default function PostPage() {
             </button>
           </form>
           <div className="space-y-6">
-            {comments.map((comment, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-md p-6 transition-shadow duration-300 hover:shadow-lg">
+            {comments.map((comment) => (
+              <div key={comment._id} className="bg-white rounded-lg shadow-md p-6 transition-shadow duration-300 hover:shadow-lg">
                 <div className="flex justify-between items-center mb-3">
-                  <span className="font-semibold text-purple-600">{comment.author}</span>
-                  <span className="text-sm text-gray-500">{comment.date}</span>
+                  <span className="font-semibold text-purple-600">{comment.userId || '익명'}</span>
+                  <span className="text-sm text-gray-500">{new Date(comment.createdAt).toLocaleString()}</span>
                 </div>
-                <p className="text-gray-700">{comment.content}</p>
+                <p className="text-gray-700">{comment.comment}</p>
+                <button onClick={() => handleCommentDelete(comment._id)} className="text-red-500 hover:text-red-700">삭제</button>
               </div>
             ))}
           </div>

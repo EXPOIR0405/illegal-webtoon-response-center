@@ -14,31 +14,55 @@ if (!client) {
 }
 
 export default async function handler(req, res) {
-  try {
-    await clientPromise;
+  await clientPromise;
+  const database = client.db('communityDB');  // 'communityDB' 데이터베이스 사용
+  const collection = database.collection('comments');  // 'comments' 컬렉션 사용
 
-    const database = client.db('communityDB');  // 'communityDB' 데이터베이스 사용
-    const collection = database.collection('comments');  // 'comments' 컬렉션 사용
+  // POST 요청 처리 - 댓글 데이터를 MongoDB에 삽입
+  if (req.method === 'POST') {
+    const { userId, postId, comment } = req.body;
 
-    // POST 요청 처리 - 댓글 데이터를 MongoDB에 삽입
-    if (req.method === 'POST') {
-      const { userId, postId, comment } = req.body;
-
-      const result = await collection.insertOne({
-        userId,
-        postId,
-        comment,
-        createdAt: new Date()
-      });
-
-      res.status(200).json({ message: '댓글이 성공적으로 등록되었습니다!', result });
-    } else {
-      res.status(405).json({ message: 'POST 요청만 허용됩니다.' });
+    // userId와 comment가 null이 아닌지 확인
+    if (!userId || !comment) {
+      return res.status(400).json({ message: 'userId와 comment는 필수입니다.' });
     }
-  } catch (error) {
-    console.error('MongoDB 연결 실패:', error.message);
-    res.status(500).json({ error: 'MongoDB 연결 실패', details: error.message });
-  } finally {
-    await client.close(); // 연결 종료
+
+    const result = await collection.insertOne({
+      userId,
+      postId,
+      comment,
+      createdAt: new Date() // createdAt 필드 추가
+    });
+
+    res.status(200).json({
+      _id: result.insertedId,
+      userId,
+      postId,
+      comment,
+      createdAt: new Date() // createdAt 필드 추가
+    });
+  } 
+  // DELETE 요청 처리 - 댓글 삭제
+  else if (req.method === 'DELETE') {
+    const { id } = req.query; // 댓글 ID를 쿼리에서 가져옴
+    try {
+      await collection.deleteOne({ _id: new ObjectId(id) }); // MongoDB에서 댓글 삭제
+      res.status(204).end(); // 성공적으로 삭제
+    } catch (error) {
+      res.status(500).json({ message: '댓글 삭제 실패', error });
+    }
+  } 
+  // GET 요청 처리 - 댓글 가져오기
+  else if (req.method === 'GET') {
+    const { postId } = req.query; // 게시글 ID를 쿼리에서 가져옴
+    try {
+      const comments = await collection.find({ postId }).toArray(); // 해당 게시글의 댓글 가져오기
+      res.status(200).json(comments);
+    } catch (error) {
+      res.status(500).json({ message: '댓글 가져오기 실패', error });
+    }
+  } else {
+    res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
