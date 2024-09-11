@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb'; // ObjectId 추가
 
 const uri = process.env.MONGODB_URI;
 let client;
@@ -46,9 +46,13 @@ export default async function handler(req, res) {
   else if (req.method === 'DELETE') {
     const { id } = req.query; // 댓글 ID를 쿼리에서 가져옴
     try {
-      await collection.deleteOne({ _id: new ObjectId(id) }); // MongoDB에서 댓글 삭제
+      const result = await collection.deleteOne({ _id: new ObjectId(id) }); // ObjectId로 변환
+      if (result.deletedCount === 0) {
+        return res.status(404).json({ message: '댓글을 찾을 수 없습니다.' });
+      }
       res.status(204).end(); // 성공적으로 삭제
     } catch (error) {
+      console.error('댓글 삭제 오류:', error);
       res.status(500).json({ message: '댓글 삭제 실패', error });
     }
   } 
