@@ -17,7 +17,12 @@ export default async function handler(req, res) {
     const collection = database.collection('posts');  // 'posts' 컬렉션 사용
 
     if (req.method === 'POST') {
-      const { title, content, file } = req.body;
+      const { userId, title, content } = req.body;
+
+      // 로그인한 사용자만 글 작성 가능
+      if (!userId) {
+        return res.status(403).json({ message: '글 작성 권한이 없습니다.' });
+      }
 
       // MongoDB에 새 게시글 저장
       const result = await collection.insertOne({

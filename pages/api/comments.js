@@ -45,8 +45,20 @@ export default async function handler(req, res) {
   // DELETE 요청 처리 - 댓글 삭제
   else if (req.method === 'DELETE') {
     const { id } = req.query; // 댓글 ID를 쿼리에서 가져옴
+    const { userId } = req.body; // 요청 본문에서 userId 가져옴
+
     try {
-      const result = await collection.deleteOne({ _id: new ObjectId(id) }); // ObjectId로 변환
+      const comment = await collection.findOne({ _id: new ObjectId(id) }); // 댓글 조회
+      if (!comment) {
+        return res.status(404).json({ message: '댓글을 찾을 수 없습니다.' });
+      }
+
+      // 댓글 작성자 또는 관리자만 삭제 가능
+      if (comment.userId !== userId && userId !== 'adminUserId') { // 'adminUserId'는 관리자 ID로 설정
+        return res.status(403).json({ message: '삭제 권한이 없습니다.' });
+      }
+
+      const result = await collection.deleteOne({ _id: new ObjectId(id) });
       if (result.deletedCount === 0) {
         return res.status(404).json({ message: '댓글을 찾을 수 없습니다.' });
       }

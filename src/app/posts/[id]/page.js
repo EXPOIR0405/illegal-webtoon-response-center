@@ -14,6 +14,8 @@ export default function PostPage() {
   const [comments, setComments] = useState([])
   const [isShareModalOpen, setIsShareModalOpen] = useState(false)
   const [isLiked, setIsLiked] = useState(false)
+  const [userId, setUserId] = useState(null); // 로그인한 사용자 ID
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
   const params = useParams()
   const router = useRouter()
   const { id } = params
@@ -57,13 +59,17 @@ export default function PostPage() {
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
+    if (!userId) {
+      setIsModalOpen(true); // 로그인 모달 열기
+      return;
+    }
     try {
       const response = await fetch(`/api/comments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId: '사용자 ID', postId: id, comment: newComment }), // userId 추가
+        body: JSON.stringify({ userId, postId: id, comment: newComment }), // userId 추가
       });
       if (!response.ok) {
         throw new Error('댓글 작성 실패');
@@ -79,6 +85,10 @@ export default function PostPage() {
 
   // 댓글 삭제 핸들러 추가
   const handleCommentDelete = async (commentId) => {
+    if (!userId) {
+      setIsModalOpen(true); // 로그인 모달 열기
+      return;
+    }
     try {
       const response = await fetch(`/api/comments?id=${commentId}`, {
         method: 'DELETE',
@@ -102,6 +112,10 @@ export default function PostPage() {
   const handleLike = () => {
     setIsLiked(!isLiked)
   }
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   if (isLoading) return <div className="flex justify-center items-center h-screen">로딩 중...</div>
   if (error) return <div className="p-4 text-red-500 text-center">{error}</div>
@@ -181,6 +195,24 @@ export default function PostPage() {
           링크가 클립보드에 복사되었습니다!
         </div>
       )}
+      <LoginModal isOpen={isModalOpen} onClose={closeModal} />
     </div>
   )
 }
+
+const LoginModal = ({ isOpen, onClose }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg">
+        <h2 className="text-lg font-bold">로그인이 필요합니다</h2>
+        <p className="mt-2">댓글 작성 및 글 작성, 삭제를 위해 로그인이 필요합니다.</p>
+        <button onClick={onClose} className="mt-4 px-4 py-2 bg-purple-600 text-white rounded">
+          닫기
+        </button>
+      </div>
+    </div>
+  );
+};
+

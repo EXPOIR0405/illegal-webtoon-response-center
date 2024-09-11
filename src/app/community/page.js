@@ -93,6 +93,20 @@ export default function CommunityPage() {
             <Link href="/writing" className="mt-4 sm:mt-6 w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-300 text-center block text-sm sm:text-base">
               새 토픽 작성하기
             </Link>
+
+            {/* 회원가입 버튼 추가 */}
+            <div className="flex justify-center mt-4">
+              <Link href="/signup">
+                <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-300">
+                  회원가입
+                </button>
+              </Link>
+              <Link href="/login">
+                <button className="ml-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition duration-300">
+                  로그인
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -103,7 +117,3 @@ export default function CommunityPage() {
     </div>
   )
 }
-
-
-
-//추가
