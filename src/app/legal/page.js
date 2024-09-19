@@ -42,7 +42,7 @@ const FAQPage = () => {
     <div className="min-h-screen bg-white">
       <header className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold">고객센터</h1>
+          <h1 className="text-xl font-bold">맞춤형 법률 정보</h1>
           <nav>
             <ul className="flex space-x-6 text-sm">
               <li><Link href="/community" className="text-gray-600 hover:text-gray-900">커뮤니티</Link></li> {/* Link로 변경 */}
