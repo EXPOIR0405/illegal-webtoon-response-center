@@ -1,41 +1,42 @@
-import { NextResponse } from 'next/server';
-import { MongoClient } from 'mongodb';
+import clientPromise from '@/lib/mongodb';
+import { ObjectId } from 'mongodb';
 
-const uri = process.env.MONGODB_URI;
-const client = new MongoClient(uri);
+export async function GET(req) {
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get('id');
 
-export async function GET() {
   try {
-    await client.connect();
-    console.log('MongoDB에 연결되었습니다.');
+    const client = await clientPromise;
     const database = client.db('communityDB');
     const collection = database.collection('posts');
 
-    const posts = await collection.find().toArray();
-    console.log('조회된 게시글:', posts);
-    return NextResponse.json(posts);
+    if (id) {
+      const postId = new ObjectId(id);
+      const post = await collection.findOne({ _id: postId });
+
+      if (!post) {
+        return new Response(JSON.stringify({ message: '게시글을 찾을 수 없습니다.' }), {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+
+      return new Response(JSON.stringify(post), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    } else {
+      const posts = await collection.find({}).toArray();
+      return new Response(JSON.stringify(posts), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
   } catch (error) {
-    console.error('게시글 목록 조회 오류:', error);
-    return NextResponse.json({ message: '서버 오류가 발생했습니다.' }, { status: 500 });
-  } finally {
-    await client.close();
-  }
-}
-
-export async function POST(request) {
-  try {
-    await client.connect();
-    const database = client.db('communityDB');
-    const collection = database.collection('posts');
-
-    const postData = await request.json();
-    const result = await collection.insertOne(postData);
-
-    return NextResponse.json({ message: '게시글이 성공적으로 등록되었습니다.', postId: result.insertedId }, { status: 201 });
-  } catch (error) {
-    console.error('게시글 등록 오류:', error);
-    return NextResponse.json({ message: '서버 오류가 발생했습니다.' }, { status: 500 });
-  } finally {
-    await client.close();
+    console.error('게시글 조회 오류:', error);
+    return new Response(JSON.stringify({ error: '서버 오류가 발생했습니다.' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }

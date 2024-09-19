@@ -30,7 +30,8 @@ export default function WritingPage() {
     setFile(e.target.files[0])
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     try {
       const postData = {
         title,
@@ -72,38 +73,39 @@ export default function WritingPage() {
       </h1>
 
       <div className="bg-white rounded-lg shadow-lg p-6">
-        <input
-          type="text"
-          placeholder="제목을 입력하세요"
-          className="w-full p-2 mb-4 border border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-
-        <ReactQuill
-          theme="snow"
-          modules={modules}
-          value={content}
-          onChange={setContent}
-          className="mb-4"
-          style={{ height: '400px', marginBottom: '50px' }}
-        />
-
-        <div className="flex items-center mb-4">
-          <label htmlFor="file-upload" className="cursor-pointer bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition duration-300">
-            <FileUp className="inline-block mr-2" />
-            파일 첨부
-          </label>
-          <input id="file-upload" type="file" className="hidden" onChange={handleFileChange} />
-          <span className="ml-4 text-gray-600">여기에 파일을 끌어놓거나 파일 첨부 버튼을 클릭하세요</span>
-        </div>
-
-        <button
-          onClick={handleSubmit}
-          className="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-300"
-        >
-          글 등록
-        </button>
+        <form onSubmit={handleSubmit}>
+          <input 
+            type="text" 
+            id="postTitle"
+            name="postTitle"
+            placeholder="제목" 
+            value={title} 
+            onChange={(e) => setTitle(e.target.value)} 
+            className="w-full mb-4 p-2 border rounded"
+          />
+          <ReactQuill 
+            value={content} 
+            onChange={setContent} 
+            modules={modules}
+            className="mb-4"
+          />
+          <div className="flex items-center mb-4">
+            <label htmlFor="file-upload" className="cursor-pointer bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition duration-300">
+              <FileUp className="inline-block mr-2" />
+              파일 첨부
+            </label>
+            <input id="file-upload" type="file" className="hidden" onChange={handleFileChange} />
+            <span className="ml-4 text-gray-600">
+              {file ? file.name : "여기에 파일을 끌어놓거나 파일 첨부 버튼을 클릭하세요"}
+            </span>
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-300"
+          >
+            글 등록
+          </button>
+        </form>
       </div>
 
       {showPopup && (
