@@ -1,12 +1,12 @@
-'use client' // 클라이언트 컴포넌트로 지정
+'use client'
 
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
-import Link from 'next/link'; // Link 컴포넌트 추가
+import Link from 'next/link';
 
 const FAQPage = () => {
   const [activeCategory, setActiveCategory] = useState('질문 TOP');
-  const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태 추가
+  const [searchTerm, setSearchTerm] = useState('');
   const categories = ['질문 TOP', '법적 절차', '저작권 보호 방법', '웹소설 관련 자주 묻는 질문'];
   const faqs = {
     '질문 TOP': [
@@ -26,15 +26,13 @@ const FAQPage = () => {
       { q: '웹소설도 저작권 등록을 해야 하나요?', a: '웹소설도 저작권 등록을 해야 합니다. 저작권 등록은 저작권 보호를 위한 중요한 단계입니다.' },
       { q: '내 웹소설이 번역되어 불법 배포되고 있어요. 어떻게 대응할 수 있나요?', a: '번역도 원작자의 허락 없이는 저작권 침해에 해당됩니다. 번역물 또한 저작권 보호 대상이므로, 불법 배포된 번역본에 대해 법적 조치를 취할 수 있습니다.' },
     ],
-    // 다른 카테고리의 FAQ 항목들...
   };
 
-  // 검색 결과 필터링 함수
-  const filteredFAQs = (faqs[activeCategory] || []).filter(faq => // 선택된 카테고리에서 FAQ를 가져옴
+  const filteredFAQs = (faqs[activeCategory] || []).filter(faq =>
     faq.q.includes(searchTerm) || faq.a.includes(searchTerm)
   );
 
-  const allFilteredFAQs = Object.values(faqs).flat().filter(faq => // 모든 카테고리에서 검색어로 필터링
+  const allFilteredFAQs = Object.values(faqs).flat().filter(faq =>
     faq.q.includes(searchTerm) || faq.a.includes(searchTerm)
   );
 
@@ -45,9 +43,9 @@ const FAQPage = () => {
           <h1 className="text-xl font-bold">맞춤형 법률 정보</h1>
           <nav>
             <ul className="flex space-x-6 text-sm">
-              <li><Link href="/community" className="text-gray-600 hover:text-gray-900">커뮤니티</Link></li> {/* Link로 변경 */}
-              <li><Link href="/report" className="text-gray-600 hover:text-gray-900">피해 사건 신고</Link></li> {/* Link로 변경 */}
-              <li><Link href="/support" className="text-gray-600 hover:text-gray-900">기타 지원</Link></li> {/* Link로 변경 */}
+              <li><Link href="/community" className="text-gray-600 hover:text-gray-900">커뮤니티</Link></li>
+              <li><Link href="/report" className="text-gray-600 hover:text-gray-900">불법 사이트 신고</Link></li>
+              <li><Link href="/support" className="text-gray-600 hover:text-gray-900">기타 지원</Link></li>
             </ul>
           </nav>
         </div>
@@ -60,16 +58,16 @@ const FAQPage = () => {
             type="text"
             placeholder="무엇이든 찾아보세요"
             className="w-full py-3 pl-12 pr-4 text-gray-900 border rounded-lg focus:outline-none focus:border-blue-500"
-            value={searchTerm} // 검색어 상태 연결
-            onChange={(e) => setSearchTerm(e.target.value)} // 검색어 업데이트
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
           <Search className="absolute left-4 top-3.5 h-5 w-5 text-gray-400" />
         </div>
-        <div className="flex">
-          <aside className="w-1/4 pr-8">
-            <ul>
+        <div className="flex flex-col md:flex-row">
+          <aside className="w-full md:w-1/4 pr-0 md:pr-8 mb-6 md:mb-0">
+            <ul className="flex flex-wrap md:flex-col">
               {categories.map(category => (
-                <li key={category} className="mb-2">
+                <li key={category} className="mb-2 w-1/2 md:w-full">
                   <button
                     onClick={() => setActiveCategory(category)}
                     className={`text-left w-full py-2 px-4 rounded ${
@@ -82,32 +80,19 @@ const FAQPage = () => {
               ))}
             </ul>
           </aside>
-          <div className="w-3/4">
-            {searchTerm ? allFilteredFAQs.map((faq, index) => ( // 검색어가 있을 경우 모든 필터링된 FAQ 사용
-              <div key={index} className="mb-6">
+          <div className="w-full md:w-3/4">
+            {(searchTerm ? allFilteredFAQs : filteredFAQs).map((faq, index) => (
+              <div key={index} className="mb-6 border-b pb-6">
                 <h3 
-                  className="text-lg font-medium text-gray-900 mb-2 cursor-pointer" 
+                  className="text-base md:text-lg font-medium text-gray-900 mb-2 cursor-pointer" 
                   onClick={() => {
                     const answerElement = document.getElementById(`answer-${index}`);
-                    answerElement.classList.toggle('hidden'); // 답변 토글
+                    answerElement.classList.toggle('hidden');
                   }}
                 >
                   {faq.q}
                 </h3>
-                <p id={`answer-${index}`} className="text-gray-600 hidden">{faq.a}</p> {/* 기본적으로 숨김 */}
-              </div>
-            )) : filteredFAQs.map((faq, index) => ( // 검색어가 없을 경우 선택된 카테고리의 FAQ 사용
-              <div key={index} className="mb-6">
-                <h3 
-                  className="text-lg font-medium text-gray-900 mb-2 cursor-pointer" 
-                  onClick={() => {
-                    const answerElement = document.getElementById(`answer-${index}`);
-                    answerElement.classList.toggle('hidden'); // 답변 토글
-                  }}
-                >
-                  {faq.q}
-                </h3>
-                <p id={`answer-${index}`} className="text-gray-600 hidden">{faq.a}</p> {/* 기본적으로 숨김 */}
+                <p id={`answer-${index}`} className="text-gray-600 hidden">{faq.a}</p>
               </div>
             ))}
           </div>
