@@ -1,5 +1,6 @@
 'use client'
 
+
 import { useState, useCallback } from 'react'
 import { ArrowLeft, FileUp, X } from 'lucide-react'
 import dynamic from 'next/dynamic'
@@ -59,15 +60,16 @@ export default function WritingPage() {
         body: JSON.stringify(postData),
       })
 
-      const result = await response.json()
-      console.log('응답 결과:', result)
-
-      if (response.ok) {
-        setShowPopup(true)
-      } else {
+      if (!response.ok) {
+        const result = await response.json()
         console.error('글 등록 실패:', result.message)
         alert('글 등록 실패: ' + result.message)
+        return
       }
+
+      const result = await response.json()
+      console.log('응답 결과:', result)
+      setShowPopup(true)
     } catch (error) {
       console.error('등록 중 오류 발생:', error)
       alert('등록 중 오류 발생: ' + error.message)
