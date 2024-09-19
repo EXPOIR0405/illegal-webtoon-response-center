@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
-import { ArrowLeft, FileUp } from 'lucide-react'
+import { useState, useCallback } from 'react'
+import { ArrowLeft, FileUp, X } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
+import { useDropzone } from 'react-dropzone'
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 import 'react-quill/dist/quill.snow.css'
@@ -26,9 +27,20 @@ export default function WritingPage() {
     ],
   }
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0])
-  }
+  const onDrop = useCallback((acceptedFiles) => {
+    setFile(acceptedFiles[0])
+  }, [])
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      'image/*': ['.jpeg', '.jpg', '.png'],
+      'application/pdf': ['.pdf'],
+      'application/msword': ['.doc'],
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx']
+    },
+    multiple: false
+  })
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -54,15 +66,21 @@ export default function WritingPage() {
         setShowPopup(true)
       } else {
         console.error('글 등록 실패:', result.message)
+        alert('글 등록 실패: ' + result.message)
       }
     } catch (error) {
       console.error('등록 중 오류 발생:', error)
+      alert('등록 중 오류 발생: ' + error.message)
     }
   }
 
   const handleConfirm = () => {
     setShowPopup(false)
     router.push('/community')
+  }
+
+  const removeFile = () => {
+    setFile(null)
   }
 
   return (
@@ -87,17 +105,38 @@ export default function WritingPage() {
             value={content} 
             onChange={setContent} 
             modules={modules}
-            className="mb-4"
+            className="mb-4 h-64"
           />
-          <div className="flex items-center mb-4">
-            <label htmlFor="file-upload" className="cursor-pointer bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition duration-300">
-              <FileUp className="inline-block mr-2" />
-              파일 첨부
-            </label>
-            <input id="file-upload" type="file" className="hidden" onChange={handleFileChange} />
-            <span className="ml-4 text-gray-600">
-              {file ? file.name : "여기에 파일을 끌어놓거나 파일 첨부 버튼을 클릭하세요"}
-            </span>
+          <div className="mb-4">
+            <div 
+              {...getRootProps()} 
+              className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition duration-300 ${
+                isDragActive ? 'border-purple-500 bg-purple-50' : 'border-gray-300 hover:border-purple-500'
+              }`}
+            >
+              <input {...getInputProps()} />
+              <FileUp className="mx-auto mb-2" />
+              {isDragActive ? (
+                <p>파일을 여기에 놓으세요...</p>
+              ) : (
+                <p>파일을 이 영역에 드래그하거나 클릭하여 선택하세요</p>
+              )}
+              <p className="text-sm text-gray-500 mt-1">
+                (허용 파일 형식: JPG, PNG, PDF, DOC, DOCX)
+              </p>
+            </div>
+            {file && (
+              <div className="mt-2 p-2 bg-purple-100 rounded flex items-center justify-between">
+                <span className="text-sm text-purple-700">{file.name}</span>
+                <button
+                  type="button"
+                  onClick={removeFile}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            )}
           </div>
           <button
             type="submit"
