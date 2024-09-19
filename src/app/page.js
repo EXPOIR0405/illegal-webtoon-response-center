@@ -23,7 +23,7 @@ const supportMessages = [
   "작가님들의 노력에 감사드립니다",
   "웹툰으로 힘든 시기를 이겨냈어요",
   "앞으로도 좋은 작품 기대할게요",
-  "창작자의 권리를 존중해요"
+  "세상에는 분명 선한사람이 더 많을테니, 힘내시고 쭉 연재해주세요..!"
 ]
 
 export default function Home() {
@@ -99,7 +99,7 @@ export default function Home() {
         </section>
 
         <section className="mb-16 bg-white rounded-lg shadow-md p-8">
-          <h2 className="text-3xl font-bold mb-6 text-gray-800">불법사이이트 피해 통계</h2>
+          <h2 className="text-3xl font-bold mb-6 text-gray-800">불법사이트 피해 통계</h2>
           <ResponsiveContainer width="100%" height={400}>
             <BarChart data={data}>
               <CartesianGrid strokeDasharray="3 3" />
