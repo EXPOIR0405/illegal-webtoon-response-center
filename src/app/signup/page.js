@@ -27,27 +27,26 @@ export default function SignUpPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    
     try {
       const response = await fetch('/api/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ email, password }),
       });
 
       if (!response.ok) {
-        throw new Error('서버 응답이 올바르지 않습니다.');
+        const errorData = await response.json();
+        throw new Error(errorData.message || '서버 오류가 발생했습니다.');
       }
 
       const data = await response.json();
       console.log('회원가입 성공:', data);
-      setShowModal(true);
+      // 성공 후 처리 (예: 로그인 페이지로 리다이렉트)
     } catch (error) {
-      console.error('회원가입 오류:', error);
-      setError('회원가입 중 오류가 발생했습니다. 다시 시도해 주세요.');
+      console.error('회원가입 오류:', error.message);
+      // 오류 메시지를 사용자에게 표시
     }
   };
 

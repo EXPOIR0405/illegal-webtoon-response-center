@@ -1,3 +1,6 @@
 {
+
+  "eslintConfig": {
   "extends": "next/core-web-vitals"
+}
 }

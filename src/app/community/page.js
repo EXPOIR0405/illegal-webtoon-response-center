@@ -18,7 +18,7 @@ export default function CommunityPage() {
           <Link href={`/posts/${topic._id}`}>
             <div className="block hover:bg-purple-50 rounded p-2 transition duration-300">
               <h3 className="font-semibold text-base sm:text-lg text-purple-700">
-                {topic.title}{topic.replies > 0 ? ` [- ${topic.replies}]` : ''}
+                {topic.title}{topic.replies > 0 ? ` [${topic.replies}]` : ''}
               </h3>
               <div className="flex justify-between text-xs sm:text-sm text-purple-500 mt-1 sm:mt-2">
                 <span>번호: {topic.number} | 분류: {topic.category}</span>
@@ -34,23 +34,25 @@ export default function CommunityPage() {
   // 백엔드에서 최근 글 목록 가져오기
   useEffect(() => {
     const fetchTopics = async () => {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
-        const response = await fetch('/api/posts') // 백엔드 API로 요청
+        const response = await fetch('/api/posts');
+        console.log('API 응답 상태:', response.status);
         if (!response.ok) {
-          throw new Error('서버 응답이 올바르지 않습니다.')
+          throw new Error(`서버 응답이 올바르지 않습니다. 상태 코드: ${response.status}`);
         }
-        const data = await response.json()
-        setRecentTopics(data) // 응답 데이터를 상태로 저장
+        const data = await response.json();
+        console.log('받은 데이터:', data);
+        setRecentTopics(data);
       } catch (err) {
-        setError('글 목록을 불러오는 중 오류가 발생했습니다.')
-        console.error('에러 상세:', err)
+        setError('글 목록을 불러오는 중 오류가 발생했습니다.');
+        console.error('에러 상세:', err);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
-    fetchTopics()
-  }, []) // 페이지 로드 시 한 번만 실행
+    };
+    fetchTopics();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-100 to-white p-4 sm:p-8">

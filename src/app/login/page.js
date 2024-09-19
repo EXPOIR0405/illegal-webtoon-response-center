@@ -23,10 +23,9 @@ export default function LoginPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
-        
         try {
-            const response = await fetch('/api/login', { // 로그인 API 엔드포인트
+            console.log('로그인 시도:', formData.email); // 디버깅용 로그
+            const response = await fetch('/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -34,16 +33,18 @@ export default function LoginPage() {
                 body: JSON.stringify(formData),
             });
 
+            const data = await response.json();
+            
             if (!response.ok) {
-                throw new Error('로그인에 실패했습니다.');
+                throw new Error(data.message || '로그인에 실패했습니다.');
             }
 
-            const data = await response.json();
             console.log('로그인 성공:', data);
-            setShowModal(true);
+            // 로그인 성공 후 처리 (예: 메인 페이지로 리다이렉트)
+            router.push('/');
         } catch (error) {
-            console.error('로그인 오류:', error);
-            setError('로그인 중 오류가 발생했습니다. 다시 시도해 주세요.');
+            console.error('로그인 오류:', error.message);
+            setError(error.message);
         }
     };
 

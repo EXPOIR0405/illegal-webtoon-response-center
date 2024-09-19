@@ -77,7 +77,7 @@ export default function Home() {
         </div>
       )}
 
-      <main className="container mx-auto px-4 py-12">
+      <main className="container mx-auto px-4 py-12 pt-24">
         <section className="mb-16 bg-white rounded-lg shadow-md p-8">
           <div className="md:flex items-center">
             <div className="md:w-2/3 pr-8">
@@ -99,12 +99,15 @@ export default function Home() {
         </section>
 
         <section className="mb-16 bg-white rounded-lg shadow-md p-8">
-          <h2 className="text-3xl font-bold mb-6 text-gray-800">불법사이트 피해 통계</h2>
+          <h2 className="text-3xl font-bold mb-6 text-gray-800">불법사이이트 피해 통계</h2>
           <ResponsiveContainer width="100%" height={400}>
             <BarChart data={data}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
+              <XAxis dataKey="name" padding={{ left: 30, right: 30 }} tickMargin={10} />
+              <YAxis
+                tickCount={5}
+                domain={['auto', 'auto']}
+              />
               <Tooltip />
               <Legend />
               <Bar dataKey="불법사이트피해액" fill="#FF0000" />
