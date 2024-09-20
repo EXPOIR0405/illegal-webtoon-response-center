@@ -52,7 +52,7 @@ const FAQPage = () => {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
-        <h2 className="text-3xl font-bold mb-8">변호사 선임 전 알아두어야 할 것</h2>
+        <h2 className="text-3xl font-bold mb-8">법률 정보</h2>
         <div className="relative mb-8">
           <input
             type="text"
@@ -98,6 +98,14 @@ const FAQPage = () => {
           </div>
         </div>
       </main>
+
+      <footer className="bg-gray-100 py-4 mt-8">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <p className="text-sm text-gray-500">
+            현재 이 페이지는 개발진행 중이며, 제공된 정보는 참고용입니다. 보다 정확한 법률 자문이 필요하시다면 전문가와 상의하시기 바랍니다.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };
