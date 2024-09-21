@@ -3,16 +3,8 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { MessageSquare, Mail, Info, Code, Link as LinkIcon, GamepadIcon, Menu, X, AlertCircle, BookOpen, FileText, Users } from 'lucide-react'
 import { motion } from 'framer-motion'
-
-const data = [
-  { name: '2019년', 불법사이트피해액: 3183},
-  { name: '2020년', 불법사이트피해액: 5488},
-  { name: '2021년', 불법사이트피해액: 8427},
-  { name: '2022년', 불법사이트피해액: 7215},
-]
 
 const supportMessages = [
   "정식 독자들을 믿고 용기 잃지 마시길. 우린 영원히 작가님 편입니다.",
@@ -45,102 +37,69 @@ export default function Home() {
   const [nextVideoIndex, setNextVideoIndex] = useState(1)
   const [isTransitioning, setIsTransitioning] = useState(false)
 
-  // 새로 추가된 상태와 효과
-  const [currentYear, setCurrentYear] = useState(2019);
+  
+  const [currentYearIndex, setCurrentYearIndex] = useState(0);
   const [animatedDamage, setAnimatedDamage] = useState(0);
+  const [animationComplete, setAnimationComplete] = useState(false);
+  const [showEvent, setShowEvent] = useState(false);
+
+  const yearData = [
+    { year: 2017, damage: 5586 },
+    { year: 2018, damage: 8378 },
+    { year: 2018.8, damage: 8378, event: "밤토끼 운영자 검거" },
+    { year: 2019, damage: 3183 },
+    { year: 2020, damage: 5488 },
+    { year: 2021, damage: 8427 },
+    { year: 2022, damage: 7215 },
+  ];
 
   useEffect(() => {
-    const yearInterval = setInterval(() => {
-      setCurrentYear(prevYear => {
-        if (prevYear < 2022) {
-          return prevYear + 1;
-        } else {
-          clearInterval(yearInterval);
-          return prevYear;
-        }
-      });
-    }, 2000);
-    return () => clearInterval(yearInterval);
-  }, []);
-
-  useEffect(() => {
-    let damage;
-    switch(currentYear) {
-      case 2019: damage = 3183; break;
-      case 2020: damage = 5488; break;
-      case 2021: damage = 8427; break;
-      case 2022: damage = 9192; break;
-      default: damage = 0;
+    const currentData = yearData[currentYearIndex];
+    if (currentData.event) {
+      setShowEvent(true);
+      const timer = setTimeout(() => {
+        setShowEvent(false);
+        setCurrentYearIndex((prevIndex) => (prevIndex + 1) % yearData.length);
+      }, 3000);
+      return () => clearTimeout(timer);
     }
+
     let start = 0;
-    const end = damage;
-    const duration = 2000;
+    const end = currentData.damage;
+    const duration = 3000;
     const increment = end / (duration / 16);
+    
     const timer = setInterval(() => {
       start += increment;
       if (start >= end) {
         clearInterval(timer);
         setAnimatedDamage(end);
+        setAnimationComplete(true);
       } else {
         setAnimatedDamage(start);
       }
     }, 16);
+
     return () => clearInterval(timer);
-  }, [currentYear]);
-
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsTyping(true)
-      setTimeout(() => {
-        setVisibleMessages(prevMessages => {
-          const newMessage = supportMessages[Math.floor(Math.random() * supportMessages.length)]
-          const updatedMessages = [...prevMessages, newMessage]
-          if (updatedMessages.length > 4) {
-            updatedMessages.shift()
-          }
-          return updatedMessages
-        })
-        setIsTyping(false)
-      }, 1500)
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [])
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsTyping(true)
-      setTimeout(() => {
-        setVisibleMessages(prevMessages => {
-          const newMessage = supportMessages[Math.floor(Math.random() * supportMessages.length)]
-          const updatedMessages = [...prevMessages, newMessage]
-          if (updatedMessages.length > 4) {
-            updatedMessages.shift()
-          }
-          return updatedMessages
-        })
-        setIsTyping(false)
-      }, 1500)
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [])
+  }, [currentYearIndex]);
 
   useEffect(() => {
-    const videoElement = document.getElementById(`video-${currentVideoIndex}`)
-    if (videoElement) {
-      videoElement.play()
+    if (animationComplete) {
+      const nextTimer = setTimeout(() => {
+        setCurrentYearIndex((prevIndex) => (prevIndex + 1) % yearData.length);
+        setAnimationComplete(false);
+      }, 2000);
+
+      return () => clearTimeout(nextTimer);
     }
+  }, [animationComplete]);
 
-    const transitionTimer = setTimeout(() => {
-      setIsTransitioning(true)
-      setTimeout(() => {
-        setCurrentVideoIndex((prevIndex) => (prevIndex + 1) % videoUrls.length)
-        setNextVideoIndex((prevIndex) => (prevIndex + 1) % videoUrls.length)
-        setIsTransitioning(false)
-      }, 1000)
-    }, 5000)
-
-    return () => clearTimeout(transitionTimer)
-  }, [currentVideoIndex])
+  const calculateDamageRate = (index) => {
+    if (index === 0 || yearData[index].event) return null;
+    const prevDamage = yearData[index - 1].damage;
+    const currentDamage = yearData[index].damage;
+    return ((currentDamage - prevDamage) / prevDamage * 100).toFixed(2);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -259,24 +218,44 @@ export default function Home() {
         </section>
 
        {/* 불법사이트 피해 통계 섹션 */}
-        <section className="min-h-screen mb-16 bg-white rounded-lg shadow-md p-4 md:p-8 flex flex-col justify-center items-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800 mt-4">불법사이트 피해 통계</h2>
-          <div className="flex flex-col md:flex-row justify-center items-center space-y-8 md:space-y-0 md:space-x-16">
-            <div className="text-center">
-              <p className="text-4xl md:text-6xl font-bold text-blue-600 mb-2">
-                {currentYear}
+       <section className="min-h-screen mb-16 bg-black rounded-lg shadow-md p-4 md:p-8 flex flex-col justify-center items-center">
+        <h2 className="text-2xl md:text-4xl font-bold mb-12 text-white mt-4 ">불법사이트로 인한 웹툰 피해액</h2>
+        <div className="flex flex-wrap justify-center items-center gap-8">
+          {yearData.map((data, index) => (
+            <div key={data.year} className={`text-center transition-all duration-300 ${
+              index === currentYearIndex ? 'scale-110 opacity-100' : 'scale-90 opacity-50'
+            }`}>
+              <p className="text-3xl md:text-5xl font-bold text-blue-600 mb-2">
+                {data.year}
               </p>
-              <p className="text-xl md:text-2xl text-gray-600">연도</p>
+              {index <= currentYearIndex && (
+                data.event ? (
+                  <p className={`text-xl md:text-2xl text-red-600 font-bold ${showEvent ? 'animate-bounce' : ''}`}>
+                    {data.event}
+                  </p>
+                ) : (
+                  <>
+                    <p className="text-xl md:text-2xl text-white">
+                      {index === currentYearIndex
+                        ? `${animatedDamage.toFixed(0)}억원`
+                        : `${data.damage}억원`}
+                    </p>
+                    {calculateDamageRate(index) !== null && (
+                      <p className="text-lg md:text-xl text-red-500">
+                        {calculateDamageRate(index)}% {parseFloat(calculateDamageRate(index)) > 0 ? '증가' : '감소'}
+                      </p>
+                    )}
+                  </>
+                )
+              )}
             </div>
-            <div className="text-center">
-              <p className="text-4xl md:text-6xl font-bold text-red-600 mb-2">
-                {animatedDamage.toFixed(0)}
-              </p>
-              <p className="text-xl md:text-2xl text-gray-600">피해액 (억원)</p>
-            </div>
-          </div>
-          <p className="text-gray-500 text-sm mt-8 text-center">출처: 한국콘텐츠진흥원</p>
-        </section>
+          ))}
+        </div>
+        <p className="text-gray-500 text-sm mt-8 text-center">출처: 한국콘텐츠진흥원</p>
+        <p className="text-gray-500 text-sm mt-2 text-center">
+          * 2017년도와 2018년도 8월까지의 누적 피해량이 1조 172억 원임을 고려하여 2018년 4개월치 분량을 임의로 계산하여 추가하였습니다.
+        </p>
+      </section>
 
         {/* 추가 정보 섹션 */}
         <section className="relative min-h-screen">
@@ -452,7 +431,7 @@ export default function Home() {
           <Users className="mr-2" /> 작가님들에게 전하고 싶은 말
         </h3>
         <p className="text-gray-700 leading-relaxed">
-          제 인생에 대해 고민하는 것보다 작가님들이 그려주신 작품을 곱씹어보는 게 인생이 바람직하다는 걸 깨달았습니다. 건강 잘 챙겨주시고 돈 많이 버세요. 여러분의 작품이 우리의 삶을 풍요롭게 만듭니다.
+          제 인생에 대해 고민하는 것보다 작가님들이 그려주신 작품을 곱씹어보는 게 인생이 더 보람있다는 걸 깨달았습니다. 작가님들 건강 잘 챙겨주시고 돈 많이 버세요. 작가님의 작품이 어느 한 사람의 삶을 풍요롭게 만들고 있습니다.
         </p>
       </div>
     </div>
