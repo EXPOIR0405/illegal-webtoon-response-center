@@ -6,6 +6,9 @@ import Image from 'next/image'
 import { MessageSquare, Mail, Info, Code, Link as LinkIcon, GamepadIcon, Menu, X, AlertCircle, BookOpen, FileText, Users } from 'lucide-react'
 import { motion, AnimatePresence, } from 'framer-motion'
 
+
+
+
 const supportMessages = [
   "정식 독자들을 믿고 용기 잃지 마시길. 우린 영원히 작가님 편입니다.",
   "작가님들의 안정적인 창작활동을 바라며, 응원하고 지원합니다. 정식 사이트에서 오래오래 작가님들의 좋은 작품을 보고싶고, 함께하고싶습니다 ! ♡",
@@ -29,6 +32,8 @@ const videoUrls = [
   '/images/video7.mp4',
 ]
 
+
+
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [visibleMessages, setVisibleMessages] = useState([])
@@ -51,6 +56,28 @@ export default function Home() {
     { year: 2021, damage: 8427 },
     { year: 2022, damage: 7215 },
   ];
+
+
+  // 비디오 전환 로직 복원
+  useEffect(() => {
+    const videoElement = document.getElementById(`video-${currentVideoIndex}`)
+    if (videoElement) {
+      videoElement.play()
+    }
+
+    const transitionTimer = setTimeout(() => {
+      setIsTransitioning(true)
+      setTimeout(() => {
+        setCurrentVideoIndex((prevIndex) => (prevIndex + 1) % videoUrls.length)
+        setNextVideoIndex((prevIndex) => (prevIndex + 1) % videoUrls.length)
+        setIsTransitioning(false)
+      }, 1000)
+    }, 5000)
+
+    return () => clearTimeout(transitionTimer)
+  }, [currentVideoIndex])
+
+
 
   // 응원메세지 효과
   useEffect(() => {
