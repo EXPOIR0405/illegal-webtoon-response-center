@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { MessageSquare, Mail, Info, Code, Link as LinkIcon, GamepadIcon, Menu, X, AlertCircle, BookOpen, FileText, Users } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence, } from 'framer-motion'
 
 const supportMessages = [
   "정식 독자들을 믿고 용기 잃지 마시길. 우린 영원히 작가님 편입니다.",
@@ -37,7 +37,6 @@ export default function Home() {
   const [nextVideoIndex, setNextVideoIndex] = useState(1)
   const [isTransitioning, setIsTransitioning] = useState(false)
 
-  
   const [currentYearIndex, setCurrentYearIndex] = useState(0);
   const [animatedDamage, setAnimatedDamage] = useState(0);
   const [animationComplete, setAnimationComplete] = useState(false);
@@ -52,6 +51,29 @@ export default function Home() {
     { year: 2021, damage: 8427 },
     { year: 2022, damage: 7215 },
   ];
+
+  // 응원메세지 효과
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsTyping(true)
+      
+      setTimeout(() => {
+        setVisibleMessages(prevMessages => {
+          const newMessage = supportMessages[Math.floor(Math.random() * supportMessages.length)]
+          let updatedMessages = [...prevMessages, newMessage]
+          if (updatedMessages.length > 4) {
+            updatedMessages = updatedMessages.slice(-4)
+          }
+          return updatedMessages
+        })
+        setIsTyping(false)
+      }, 1500)
+    }, 7000) // 간격을 7초로 늘림
+
+    return () => clearInterval(interval)
+  }, [])
+
+
 
   useEffect(() => {
     const currentData = yearData[currentYearIndex];
@@ -103,7 +125,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm fixed w-full z-10">  
+      <header className="bg-white shadow-sm fixed w-full z-50">  
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-xl md:text-2xl font-bold text-gray-800">불법 웹툰 웹소설 대응 센터</h1>
           <nav className="hidden md:flex space-x-6">
@@ -267,7 +289,7 @@ export default function Home() {
               objectFit="cover"
             />
           </div>
-          <div className="relative z-10 flex items-center justify-center min-h-screen">
+          <div className="relative z-2 flex items-center justify-center min-h-screen">
             <div className="bg-black bg-opacity-50 p-8 rounded-lg max-w-3xl">
               <h2 className="text-3xl font-bold mb-4 text-white">불법사이트의 영향</h2>
               <p className="text-white text-lg leading-relaxed mb-6">
@@ -282,77 +304,80 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 불법 웹툰 사이트 신고 섹션 */}
-        <div className="grid md:grid-cols-2 gap-8 mb-16 px-4 md:px-0">
-          <section className="bg-white rounded-lg shadow-md p-6 transition duration-300 hover:shadow-lg">
-            <figure className="relative mb-4">
-              <Image src="/images/money2.png" alt="불법 웹툰 사이트 경고" width={500} height={200} className="rounded-lg shadow-sm" />
-             
-            </figure>
-            <h2 className="text-xl md:text-2xl font-semibold mb-4 flex items-center text-gray-800">
-              <AlertCircle className="mr-2 text-red-500" /> 불법 웹툰/웹소설 사이트를 발견하셨다면?
-            </h2>
-            <p className="text-gray-600 mb-4">불법 웹툰, 불법 웹소설 사이트를 신고하고 포상금 받아가세요!</p>
-            <Link href="/report" className="inline-block bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition duration-300">
-              사이트 신고하기
-              </Link>
-          </section>
+        {/* 전체 컨테이너에 최대 너비와 중앙 정렬 추가 */}
+<div className="max-w-7xl mx-auto py-12">
+  {/* 불법 웹툰 사이트 신고 섹션 */}
+  <div className="grid md:grid-cols-2 gap-8 mb-16 px-4 lg:px-0">
+    <section className="bg-white rounded-lg shadow-md p-6 transition duration-300 hover:shadow-lg">
+      <figure className="relative mb-4">
+        <Image src="/images/money2.png" alt="불법 웹툰 사이트 경고" width={500} height={200} className="rounded-lg shadow-sm w-full h-auto object-cover" />
+      </figure>
+      <h2 className="text-xl md:text-2xl font-semibold mb-4 flex items-center text-gray-800">
+        <AlertCircle className="mr-2 text-red-500" /> 불법 웹툰/웹소설 사이트를 발견하셨다면?
+      </h2>
+      <p className="text-gray-600 mb-4">불법 웹툰, 불법 웹소설 사이트를 신고하고 포상금 받아가세요!</p>
+      <Link href="/report" className="inline-block bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition duration-300">
+        사이트 신고하기
+      </Link>
+    </section>
 
-          {/* 법률 권리 지키기 섹션 */}
-          <section className="bg-white rounded-lg shadow-md p-6 transition duration-300 hover:shadow-lg">
-            <figure className="relative mb-4">
-              <Image src="/images/lawyer.png" alt="법률 문서" width={500} height={200} className="rounded-lg shadow-sm" />
-            </figure>
-            <h2 className="text-xl md:text-2xl font-semibold mb-4 flex items-center text-gray-800">
-              <BookOpen className="mr-2 text-green-600" /> 법률 권리를 지키시고 싶다면?
-            </h2>
-            <p className="text-gray-600 mb-4">웹툰 저작권법과 불법 사이트 신고 절차에 대한 정보를 확인하세요.</p>
-            <Link href="/legal" className="text-blue-600 hover:underline">
-              자세히 보기 →
-            </Link>
-          </section>
+    {/* 법률 권리 지키기 섹션 */}
+    <section className="bg-white rounded-lg shadow-md p-6 transition duration-300 hover:shadow-lg">
+      <figure className="relative mb-4">
+        <Image src="/images/lawyer.png" alt="법률 문서" width={500} height={200} className="rounded-lg shadow-sm w-full h-auto object-cover" />
+      </figure>
+      <h2 className="text-xl md:text-2xl font-semibold mb-4 flex items-center text-gray-800">
+        <BookOpen className="mr-2 text-green-600" /> 법률 권리를 지키시고 싶다면?
+      </h2>
+      <p className="text-gray-600 mb-4">웹툰 저작권법과 불법 사이트 신고 절차에 대한 정보를 확인하세요.</p>
+      <Link href="/legal" className="text-blue-600 hover:underline">
+        자세히 보기 →
+      </Link>
+    </section>
 
-          {/* 웹툰, 웹소설 제작 지원 섹션 */}
-          <section className="bg-white rounded-lg shadow-md p-6 transition duration-300 hover:shadow-lg">
-            <figure className="relative mb-4">
-              <Image src="/images/help.png" alt="웹툰 작가 지원" width={500} height={200} className="rounded-lg shadow-sm" />
-      
-            </figure>
-            <h2 className="text-xl md:text-2xl font-semibold mb-4 flex items-center text-gray-800">
-              <FileText className="mr-2 text-purple-600" /> 웹툰, 웹소설 제작 지원
-            </h2>
-            <p className="text-gray-600 mb-4">웹툰, 웹소설 창작자를 위한 지원 정보를 공유합니다.</p>
-            <Link href="/support" className="inline-block bg-purple-600 text-white px-6 py-2 rounded-full hover:bg-purple-700 transition duration-300">
-              지원 신청하기
-            </Link>
-          </section>
+    {/* 웹툰, 웹소설 제작 지원 섹션 */}
+    <section className="bg-white rounded-lg shadow-md p-6 transition duration-300 hover:shadow-lg">
+      <figure className="relative mb-4">
+        <Image src="/images/help.png" alt="웹툰 작가 지원" width={500} height={200} className="rounded-lg shadow-sm w-full h-auto object-cover" />
+      </figure>
+      <h2 className="text-xl md:text-2xl font-semibold mb-4 flex items-center text-gray-800">
+        <FileText className="mr-2 text-purple-600" /> 웹툰, 웹소설 제작 지원
+      </h2>
+      <p className="text-gray-600 mb-4">웹툰, 웹소설 창작자를 위한 지원 정보를 공유합니다.</p>
+      <Link href="/support" className="inline-block bg-purple-600 text-white px-6 py-2 rounded-full hover:bg-purple-700 transition duration-300">
+        지원 신청하기
+      </Link>
+    </section>
 
-          {/* 커뮤니티 섹션 */}
-          <section className="bg-white rounded-lg shadow-md p-6 transition duration-300 hover:shadow-lg">
-            <figure className="relative mb-4">
-              <Image src="/images/say2.png" alt="커뮤니티 토론" width={500} height={200} className="rounded-lg shadow-sm" />
-            </figure>
-            <h2 className="text-xl md:text-2xl font-semibold mb-4 flex items-center text-gray-800">
-              <Users className="mr-2 text-yellow-600" /> 커뮤니티
-            </h2>
-            <p className="text-gray-600 mb-4">웹툰, 웹소설 창작자 여러분들의 자유로운 의견 공유 및 소통 공간입니다.</p>
-            <Link href="/community" className="inline-block bg-yellow-500 text-white px-6 py-2 rounded-full hover:bg-yellow-600 transition duration-300">
-              커뮤니티 참여하기
-            </Link>
-          </section>
-        </div>
+    {/* 커뮤니티 섹션 */}
+    <section className="bg-white rounded-lg shadow-md p-6 transition duration-300 hover:shadow-lg">
+      <figure className="relative mb-4">
+        <Image src="/images/say2.png" alt="커뮤니티 토론" width={500} height={200} className="rounded-lg shadow-sm w-full h-auto object-cover" />
+      </figure>
+      <h2 className="text-xl md:text-2xl font-semibold mb-4 flex items-center text-gray-800">
+        <Users className="mr-2 text-yellow-600" /> 커뮤니티
+      </h2>
+      <p className="text-gray-600 mb-4">웹툰, 웹소설 창작자 여러분들의 자유로운 의견 공유 및 소통 공간입니다.</p>
+      <Link href="/community" className="inline-block bg-yellow-500 text-white px-6 py-2 rounded-full hover:bg-yellow-600 transition duration-300">
+        커뮤니티 참여하기
+      </Link>
+    </section>
+  </div>
+</div>
 
         {/* 응원 메시지 섹션 */}
         <section className="min-h-screen py-16 bg-gradient-to-r from-blue-500 to-purple-600">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12 mt-15">독자들이 보내는 따뜻한 응원 메시지</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12 mt-15">독자들이 보내는 따뜻한 응원 메시지</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <AnimatePresence initial={false}>
               {visibleMessages.map((message, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  exit={{ opacity: 0, y: -50 }}
+                  transition={{ duration: 0.5 }}
                   className="bg-white rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300"
                 >
                   <p className="text-gray-800 mb-2">{message}</p>
@@ -365,18 +390,20 @@ export default function Home() {
                   </div>
                 </motion.div>
               ))}
-            </div>
-            {isTyping && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="mt-6 text-center"
-              >
-                <p className="text-white text-lg">새로운 응원 메시지가 오고 있어요...</p>
-              </motion.div>
-            )}
+            </AnimatePresence>
           </div>
-        </section>
+          {isTyping && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="mt-6 text-center"
+            >
+              <p className="text-white text-lg">새로운 응원 메시지가 오고 있어요...</p>
+            </motion.div>
+          )}
+        </div>
+      </section>
+
 
         {/* 문의하기 섹션 */}
 <section className="bg-white rounded-lg shadow-md p-8">
