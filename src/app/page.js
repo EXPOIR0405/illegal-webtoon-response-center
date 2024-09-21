@@ -163,7 +163,7 @@ export default function Home() {
                     height={500} 
                     className="rounded-lg shadow-sm" 
                   />
-                  <figcaption className="mt-2 text-sm text-center text-gray-600">글/그림 화음조</figcaption>
+                  <figcaption className="mt-2 text-sm text-center text-gray-600">글/그림 화음조 <br /> (출처 = 한국저작권보호원)</figcaption>
                 </figure>
               </div>
             </div>
@@ -171,18 +171,28 @@ export default function Home() {
         </section>
 
         {/* 불법 웹사이트의 현실과 창작자의 고통 섹션 */}
-        <section id="illegal-sites" className="bg-gray-100 py-12">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-4 text-blue-600 text-center">불법 웹사이트의 현실과 창작자의 고통</h2>
-            <p className="text-gray-700 text-lg leading-relaxed text-center mb-6">
-              수많은 불법 웹사이트가 창작자의 권리를 침해하고 있으며, 배너 광고 통해 서로 연결되어 하나의 거대한 불법 유통 네트워크를 형성하고 있습니다. <br />
-              음란물, 불법 웹툰, 불법 영화 등의 웹사이트들은 방문자가 많은 사이트일수록 불법적인 광고가 활성화되어 창작자들의 피해는 커지고 있습니다. <br />
-              이러한 문제를 해결하고, 창작자의 권리를 보호하기 위한 지속적인 대응이 필요합니다.
-            </p>
-            <div className="flex justify-center">
-              <a href="#" className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500 transition duration-300">
-                자세히 알아보기
-              </a>
+        <section id="illegal-sites" className="relative bg-gray-100 py-12">
+          <div className="absolute inset-0">
+            <Image
+              src="/images/word.png"
+              alt="불법 웹사이트의 현실을 보여주는 배경 이미지"
+              layout="fill"
+              className="object-cover"
+            />
+          </div>
+          <div className="relative container mx-auto px-4 z-10">
+            <h2 className="text-3xl font-bold mb-4 text-white text-center">불법 웹사이트의 현실</h2>
+            <div className="bg-black bg-opacity-50 p-6 rounded-lg">
+              <p className="text-white text-lg leading-relaxed text-center mb-6">
+                수많은 불법 웹사이트가 창작자의 권리를 침해하고 있으며, 배너 광고 통해 서로 연결되어 하나의 거대한 불법 유통 네트워크를 형성하고 있습니다. <br />
+                음란물, 불법 웹툰, 불법 영화 등의 웹사이트들은 방문자가 많은 사이트일수록 불법적인 광고가 활성화되어 창작자들의 피해는 커지고 있습니다. <br />
+                이러한 문제를 해결하고, 창작자의 권리를 보호하기 위한 지속적인 대응이 필요합니다.
+              </p>
+              <div className="flex justify-center">
+                <a href="#" className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500 transition duration-300">
+                  자세히 알아보기
+                </a>
+              </div>
             </div>
           </div>
         </section>
@@ -212,8 +222,8 @@ export default function Home() {
         <div className="grid md:grid-cols-2 gap-8 mb-16 px-4 md:px-0">
           <section className="bg-white rounded-lg shadow-md p-6 transition duration-300 hover:shadow-lg">
             <figure className="relative mb-4">
-              <Image src="/images/money2.jpg" alt="불법 웹툰 사이트 경고" width={500} height={200} className="rounded-lg shadow-sm" />
-              <figcaption className="mt-2 text-sm text-center text-gray-600">불법 웹툰 사이트의 경제적 피해</figcaption>
+              <Image src="/images/money2.png" alt="불법 웹툰 사이트 경고" width={500} height={200} className="rounded-lg shadow-sm" />
+             
             </figure>
             <h2 className="text-xl md:text-2xl font-semibold mb-4 flex items-center text-gray-800">
               <AlertCircle className="mr-2 text-red-500" /> 불법 웹툰/웹소설 사이트를 발견하셨다면?
@@ -227,8 +237,7 @@ export default function Home() {
           {/* 법률 권리 지키기 섹션 */}
           <section className="bg-white rounded-lg shadow-md p-6 transition duration-300 hover:shadow-lg">
             <figure className="relative mb-4">
-              <Image src="/images/lawyer.jpg" alt="법률 문서" width={500} height={200} className="rounded-lg shadow-sm" />
-              <figcaption className="mt-2 text-sm text-center text-gray-600">웹툰 저작권법 관련 문서</figcaption>
+              <Image src="/images/lawyer.png" alt="법률 문서" width={500} height={200} className="rounded-lg shadow-sm" />
             </figure>
             <h2 className="text-xl md:text-2xl font-semibold mb-4 flex items-center text-gray-800">
               <BookOpen className="mr-2 text-green-600" /> 법률 권리를 지키시고 싶다면?
@@ -242,8 +251,8 @@ export default function Home() {
           {/* 웹툰, 웹소설 제작 지원 섹션 */}
           <section className="bg-white rounded-lg shadow-md p-6 transition duration-300 hover:shadow-lg">
             <figure className="relative mb-4">
-              <Image src="/images/help.jpg" alt="웹툰 작가 지원" width={500} height={200} className="rounded-lg shadow-sm" />
-              <figcaption className="mt-2 text-sm text-center text-gray-600">웹툰 작가 지원 프로그램</figcaption>
+              <Image src="/images/help.png" alt="웹툰 작가 지원" width={500} height={200} className="rounded-lg shadow-sm" />
+      
             </figure>
             <h2 className="text-xl md:text-2xl font-semibold mb-4 flex items-center text-gray-800">
               <FileText className="mr-2 text-purple-600" /> 웹툰, 웹소설 제작 지원
@@ -257,8 +266,7 @@ export default function Home() {
           {/* 커뮤니티 섹션 */}
           <section className="bg-white rounded-lg shadow-md p-6 transition duration-300 hover:shadow-lg">
             <figure className="relative mb-4">
-              <Image src="/images/say2.jpg" alt="커뮤니티 토론" width={500} height={200} className="rounded-lg shadow-sm" />
-              <figcaption className="mt-2 text-sm text-center text-gray-600">웹툰 커뮤니티 토론</figcaption>
+              <Image src="/images/say2.png" alt="커뮤니티 토론" width={500} height={200} className="rounded-lg shadow-sm" />
             </figure>
             <h2 className="text-xl md:text-2xl font-semibold mb-4 flex items-center text-gray-800">
               <Users className="mr-2 text-yellow-600" /> 커뮤니티
@@ -367,13 +375,12 @@ export default function Home() {
     <div>
       <figure className="sticky top-20">
         <Image 
-          src="/images/2.png" 
+          src="/images/me.png" 
           alt="고객 지원" 
           width={500} 
           height={375} 
           className="rounded-lg shadow-lg" 
         />
-        <figcaption className="mt-2 text-sm text-center text-gray-600">스폰지밥의 뚱이</figcaption>
       </figure>
     </div>
   </div>

@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Coffee, Code, Pencil } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function NotFound() {
   const [progress, setProgress] = useState(0);
@@ -22,19 +22,21 @@ export default function NotFound() {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-5">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full">
         <h1 className="text-3xl font-bold text-center text-blue-600 mb-6">
-          404 - 페이지를 찾을 수 없습니다
+          이럴수가! 죄송합니다.
         </h1>
         <div className="flex justify-center mb-6">
-          <div className="relative w-24 h-24 animate-spin">
-            <Coffee className="absolute top-0 left-0 w-12 h-12 text-brown-500" />
-            <Code className="absolute top-0 right-0 w-12 h-12 text-blue-500" />
-            <Pencil className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-12 h-12 text-green-500" />
-          </div>
+          <Image
+            src="/images/404.png"
+            alt="Frustrated developer"
+            width={500}
+            height={375}
+            className="rounded-lg"
+          />
         </div>
         <p className="text-gray-600 text-center mb-6">
           죄송합니다! 요청하신 페이지를 찾을 수 없습니다.
           개발자가 지금 이 문제를 해결하기 위해 열심히 작업 중입니다.
-          잠시 기다려주세요.
+          만약 해결되고 있지 않다면 개발자가 기절한 것이니 양해 부탁드립니다.
         </p>
         <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4 overflow-hidden">
           <div 

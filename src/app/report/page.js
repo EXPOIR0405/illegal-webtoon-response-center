@@ -146,7 +146,7 @@ export default function ReportPage() {
             <h2 className="text-xl font-semibold mb-4 text-center">해당 자료는 한국 저작권 보호원으로 직통 신고가 들어갑니다. 감사합니다.</h2>
             <p className="mb-4 text-center">저작권 보호원에 신고가 정상적으로 접수되면 신고자에게 확인 메일이 발송됩니다.</p>
             <div className="mb-4 flex justify-center">
-              <Image src="/images/thanks.png" alt="저작권 보호" width={300} height={200} />
+              <Image src="/images/thanks2.png" alt="저작권 보호" width={300} height={200} />
             </div>
             <button 
               onClick={handleSubmit} // 제출 버튼에 handleSubmit 연결
