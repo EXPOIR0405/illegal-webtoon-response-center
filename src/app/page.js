@@ -45,6 +45,67 @@ export default function Home() {
   const [nextVideoIndex, setNextVideoIndex] = useState(1)
   const [isTransitioning, setIsTransitioning] = useState(false)
 
+  // 새로 추가된 상태와 효과
+  const [currentYear, setCurrentYear] = useState(2019);
+  const [animatedDamage, setAnimatedDamage] = useState(0);
+
+  useEffect(() => {
+    const yearInterval = setInterval(() => {
+      setCurrentYear(prevYear => {
+        if (prevYear < 2022) {
+          return prevYear + 1;
+        } else {
+          clearInterval(yearInterval);
+          return prevYear;
+        }
+      });
+    }, 2000);
+    return () => clearInterval(yearInterval);
+  }, []);
+
+  useEffect(() => {
+    let damage;
+    switch(currentYear) {
+      case 2019: damage = 3183; break;
+      case 2020: damage = 5488; break;
+      case 2021: damage = 8427; break;
+      case 2022: damage = 9192; break;
+      default: damage = 0;
+    }
+    let start = 0;
+    const end = damage;
+    const duration = 2000;
+    const increment = end / (duration / 16);
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= end) {
+        clearInterval(timer);
+        setAnimatedDamage(end);
+      } else {
+        setAnimatedDamage(start);
+      }
+    }, 16);
+    return () => clearInterval(timer);
+  }, [currentYear]);
+
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsTyping(true)
+      setTimeout(() => {
+        setVisibleMessages(prevMessages => {
+          const newMessage = supportMessages[Math.floor(Math.random() * supportMessages.length)]
+          const updatedMessages = [...prevMessages, newMessage]
+          if (updatedMessages.length > 4) {
+            updatedMessages.shift()
+          }
+          return updatedMessages
+        })
+        setIsTyping(false)
+      }, 1500)
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [])
   useEffect(() => {
     const interval = setInterval(() => {
       setIsTyping(true)
@@ -180,7 +241,7 @@ export default function Home() {
               className="object-cover"
             />
           </div>
-          <div className="relative container mx-auto px-4 z-10">
+          <div className="relative container mx-auto px-4 z-1">
             <h2 className="text-3xl font-bold mb-4 text-white text-center">불법 웹사이트의 현실</h2>
             <div className="bg-black bg-opacity-50 p-6 rounded-lg">
               <p className="text-white text-lg leading-relaxed text-center mb-6">
@@ -197,25 +258,49 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 불법사이트 피해 통계 섹션 */}
-        <section className="min-h-screen mb-16 bg-white rounded-lg shadow-md p-4 md:p-8">
+       {/* 불법사이트 피해 통계 섹션 */}
+        <section className="min-h-screen mb-16 bg-white rounded-lg shadow-md p-4 md:p-8 flex flex-col justify-center items-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800 mt-4">불법사이트 피해 통계</h2>
-          <div className="h-64 md:h-96">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" padding={{ left: 30, right: 30 }} tickMargin={10} />
-                <YAxis
-                  tickCount={5}
-                  domain={['auto', 'auto']}
-                />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="불법사이트피해액" fill="#FF0000" />
-              </BarChart>
-            </ResponsiveContainer>
+          <div className="flex flex-col md:flex-row justify-center items-center space-y-8 md:space-y-0 md:space-x-16">
+            <div className="text-center">
+              <p className="text-4xl md:text-6xl font-bold text-blue-600 mb-2">
+                {currentYear}
+              </p>
+              <p className="text-xl md:text-2xl text-gray-600">연도</p>
+            </div>
+            <div className="text-center">
+              <p className="text-4xl md:text-6xl font-bold text-red-600 mb-2">
+                {animatedDamage.toFixed(0)}
+              </p>
+              <p className="text-xl md:text-2xl text-gray-600">피해액 (억원)</p>
+            </div>
           </div>
-          <p className="text-gray-500 text-sm mt-4 text-right">출처: 한국콘텐츠진흥원, (단위 억원)</p>
+          <p className="text-gray-500 text-sm mt-8 text-center">출처: 한국콘텐츠진흥원</p>
+        </section>
+
+        {/* 추가 정보 섹션 */}
+        <section className="relative min-h-screen">
+          <div className="absolute inset-0">
+            <Image
+              src="/images/tired.png"
+              alt="불법사이트 관련 이미지"
+              layout="fill"
+              objectFit="cover"
+            />
+          </div>
+          <div className="relative z-10 flex items-center justify-center min-h-screen">
+            <div className="bg-black bg-opacity-50 p-8 rounded-lg max-w-3xl">
+              <h2 className="text-3xl font-bold mb-4 text-white">불법사이트의 영향</h2>
+              <p className="text-white text-lg leading-relaxed mb-6">
+                불법사이트로 인한 피해는 단순히 경제적 손실에 그치지 않습니다. 창작자의 권리 침해, 콘텐츠 산업의 위축, 
+                사회적 윤리 붕괴 등 다양한 측면에서 심각한 문제를 야기하고 있습니다. 이러한 불법사이트들의 근절을 위해 
+                정부, 기업, 시민사회가 협력하여 지속적인 노력을 기울여야 합니다.
+              </p>
+              <a href="#" className="inline-block bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500 transition duration-300">
+                자세히 알아보기
+              </a>
+            </div>
+          </div>
         </section>
 
         {/* 불법 웹툰 사이트 신고 섹션 */}
@@ -281,7 +366,7 @@ export default function Home() {
         {/* 응원 메시지 섹션 */}
         <section className="min-h-screen py-16 bg-gradient-to-r from-blue-500 to-purple-600">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl md:text-4xl font-bold mb-10 text-white text-center mb-12 mt-15">독자들이 보내는 따뜻한 응원 메시지</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12 mt-15">독자들이 보내는 따뜻한 응원 메시지</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {visibleMessages.map((message, index) => (
                 <motion.div
