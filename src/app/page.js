@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import { AlertCircle, BookOpen, FileText, Users, MessageSquare, Mail, Menu, X, Bold } from 'lucide-react'
+import { MessageSquare, Mail, Info, Code, Link as LinkIcon, GamepadIcon, Menu, X, AlertCircle, BookOpen, FileText, Users } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 const data = [
@@ -81,25 +81,6 @@ export default function Home() {
     return () => clearTimeout(transitionTimer)
   }, [currentVideoIndex])
 
-
-  useEffect(() => {
-    const videoElement = document.getElementById(`video-${currentVideoIndex}`)
-    if (videoElement) {
-      videoElement.play()
-    }
-
-    const transitionTimer = setTimeout(() => {
-      setIsTransitioning(true)
-      setTimeout(() => {
-        setCurrentVideoIndex((prevIndex) => (prevIndex + 1) % videoUrls.length)
-        setNextVideoIndex((prevIndex) => (prevIndex + 1) % videoUrls.length)
-        setIsTransitioning(false)
-      }, 1000)
-    }, 5000)
-
-    return () => clearTimeout(transitionTimer)
-  }, [currentVideoIndex])
-
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow-sm fixed w-full z-10">  
@@ -128,8 +109,8 @@ export default function Home() {
         </div>
       )}
 
-      {/* 비디오 섹션 */}
       <main className="pt-16 md:pt-20">
+        {/* 비디오 섹션 */}
         <section className="h-screen relative overflow-hidden">
           <div className="absolute inset-0 w-full h-full overflow-hidden">
             {videoUrls.map((video, index) => (
@@ -154,9 +135,6 @@ export default function Home() {
             <div className="text-center text-white px-4">
               <h1 className="text-3xl md:text-5xl font-bold mb-4">나의 소중한 작품은 내 또 다른 권리니까</h1>
               <p className="text-lg md:text-xl mb-8">창작자의 권리를 지키고, 올바른 창작 환경을 만듭니다</p>
-              <a href="#intro" className="bg-blue-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-blue-700 transition duration-300">
-                자세히 알아보기
-              </a>
             </div>
           </div>
           <div className="absolute bottom-4 right-4 text-white text-sm">
@@ -171,8 +149,8 @@ export default function Home() {
               <div className="md:w-1/2 pr-0 md:pr-8 mb-6 md:mb-0">
                 <h2 className="text-3xl md:text-4xl font-bold mb-4 text-blue-500">소개</h2>
                 <p className="text-gray-600 text-lg md:text-2xl leading-relaxed mb-6">
-                창작자들은 자신의 작품을 통해 생계를 이어가지만, 불법 사이트로 인해 그 권리가 침해되고 있습니다. 많은 창작자들이 이에 고통받고 있지만, 제대로 된 보호 방안은 여전히 부족한 상황입니다.
-                <br/>이 사이트는 불법 사이트의 실태를 알리고 창작자의 권리를 보호하고, 불법 유통에 맞서기 위한 정보를 공유하기 위해 만들어졌습니다.
+                  창작자들은 자신의 작품을 통해 생계를 이어가지만, 불법 사이트로 인해 그 권리가 침해되고 있습니다. 많은 창작자들이 이에 고통받고 있지만, 제대로 된 방안은 여전히 부족한 상황입니다.
+                  <br/>이 사이트는 불법 사이트의 실태를 알리고 창작자의 권리를 보호하고, 불법 유통에 맞서기 위한 정보를 공유하기 위해 만들어졌습니다.
                 </p>
               </div>
               
@@ -192,9 +170,26 @@ export default function Home() {
           </div>
         </section>
 
+        {/* 불법 웹사이트의 현실과 창작자의 고통 섹션 */}
+        <section id="illegal-sites" className="bg-gray-100 py-12">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold mb-4 text-blue-600 text-center">불법 웹사이트의 현실과 창작자의 고통</h2>
+            <p className="text-gray-700 text-lg leading-relaxed text-center mb-6">
+              수많은 불법 웹사이트가 창작자의 권리를 침해하고 있으며, 배너 광고 통해 서로 연결되어 하나의 거대한 불법 유통 네트워크를 형성하고 있습니다. <br />
+              음란물, 불법 웹툰, 불법 영화 등의 웹사이트들은 방문자가 많은 사이트일수록 불법적인 광고가 활성화되어 창작자들의 피해는 커지고 있습니다. <br />
+              이러한 문제를 해결하고, 창작자의 권리를 보호하기 위한 지속적인 대응이 필요합니다.
+            </p>
+            <div className="flex justify-center">
+              <a href="#" className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500 transition duration-300">
+                자세히 알아보기
+              </a>
+            </div>
+          </div>
+        </section>
+
         {/* 불법사이트 피해 통계 섹션 */}
         <section className="min-h-screen mb-16 bg-white rounded-lg shadow-md p-4 md:p-8">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">불법사이트 피해 통계</h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800 mt-4">불법사이트 피해 통계</h2>
           <div className="h-64 md:h-96">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data}>
@@ -226,7 +221,7 @@ export default function Home() {
             <p className="text-gray-600 mb-4">불법 웹툰, 불법 웹소설 사이트를 신고하고 포상금 받아가세요!</p>
             <Link href="/report" className="inline-block bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition duration-300">
               사이트 신고하기
-            </Link>
+              </Link>
           </section>
 
           {/* 법률 권리 지키기 섹션 */}
@@ -236,7 +231,7 @@ export default function Home() {
               <figcaption className="mt-2 text-sm text-center text-gray-600">웹툰 저작권법 관련 문서</figcaption>
             </figure>
             <h2 className="text-xl md:text-2xl font-semibold mb-4 flex items-center text-gray-800">
-              <BookOpen className="mr-2 text-green-600" /> ��률 권리를 지키시고 싶다면?
+              <BookOpen className="mr-2 text-green-600" /> 법률 권리를 지키시고 싶다면?
             </h2>
             <p className="text-gray-600 mb-4">웹툰 저작권법과 불법 사이트 신고 절차에 대한 정보를 확인하세요.</p>
             <Link href="/legal" className="text-blue-600 hover:underline">
@@ -275,10 +270,10 @@ export default function Home() {
           </section>
         </div>
 
-         {/* New Support Messages Section */}
-         <section className="min-h-screen py-16 bg-gradient-to-r from-blue-500 to-purple-600">
+        {/* 응원 메시지 섹션 */}
+        <section className="min-h-screen py-16 bg-gradient-to-r from-blue-500 to-purple-600">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl md:text-4xl font-bold mb-10 text-white text-center">독자들의 따뜻한 응원 메시지</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-10 text-white text-center mb-12 mt-15">독자들이 보내는 따뜻한 응원 메시지</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {visibleMessages.map((message, index) => (
                 <motion.div
@@ -288,12 +283,12 @@ export default function Home() {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="bg-white rounded-lg shadow-lg p-6 transform hover:scale-105 transition duration-300"
                 >
-                  <p className="text-gray-800 mb-4">{message}</p>
+                  <p className="text-gray-800 mb-2">{message}</p>
                   <div className="flex items-center">
                     <div className="w-10 h-10 bg-gray-300 rounded-full mr-4"></div>
                     <div>
                       <p className="font-semibold text-gray-900">익명의 독자</p>
-                      <p className="text-sm text-gray-600">열렬한 팬</p>
+                      <p className="text-sm text-gray-600">공식 플랫폼 이용자</p>
                     </div>
                   </div>
                 </motion.div>
@@ -311,53 +306,90 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="bg-white rounded-lg shadow-md p-4 md:p-8">
-          <div className="md:flex items-center">
-            <div className="md:w-2/3 pr-0 md:pr-8 mb-6 md:mb-0">
-              <h2 className="text-2xl md:text-3xl font-bold mb-4 flex items-center text-gray-800">
-                <MessageSquare className="mr-2 text-blue-600" /> 문의하기
-              </h2>
-              <p className="text-gray-600 mb-4">개발자에게 궁금한 점이 있으시면 언제든 문의해 주세요.</p>
-              <div className="bg-blue-50 p-4 rounded-lg inline-flex items-center">
-                <Mail className="mr-2 text-blue-600" />
-                <a href="mailto:rkdalswjd0405@gmail.com" className="text-blue-600 hover:underline break-all">rkdalswjd0405@gmail.com</a>
-              </div>
-              <div className="mt-6">
-                <h3 className="text-xl font-bold text-gray-800 mb-2">지나가던 개발자 소개</h3>
-                <p className="text-gray-600">
-                  정부 기관이 할 수 없다면, 제가 해야죠. 지나가던 개발자가 나섭니다!<br />
-                  불법 웹툰을 막는 진짜 방법은 사이트 셧다운 뿐만 아니라, 여러분이 클릭을 멈추는 겁니다!<br />
-                  함께 깨끗한 웹툰, 웹소설 세상을 만들어봐요!
-                </p>
-              </div>
-              <div className="mt-6">
-                <h3 className="text-xl font-bold text-gray-800 mb-2">작가님들께</h3>
-                <p className="text-gray-600">
-                  제 삶에 대해 고민하는 것보다 작품에 대한 고민할 때가 제일 행복합니다.<br />
-                  돈 많이 버시고 작가���들 건강도 꼭 챙기시고요. 감사합니다!
-                </p>
-              </div>
+        {/* 문의하기 섹션 */}
+<section className="bg-white rounded-lg shadow-md p-8">
+  <h2 className="text-3xl md:text-4xl font-bold mb-8 text-gray-800 flex items-center">
+    <MessageSquare className="mr-3 text-blue-600" size={36} /> 문의 및 정보
+  </h2>
+  
+  <div className="grid md:grid-cols-3 gap-8">
+    <div className="md:col-span-2">
+      <div className="bg-blue-50 p-6 rounded-lg shadow-md mb-8">
+        <h3 className="text-xl font-semibold mb-4 flex items-center text-blue-700">
+          <Mail className="mr-2" /> 이메일로 문의하기
+        </h3>
+        <a href="mailto:rkdalswjd0405@gmail.com" className="text-blue-600 hover:underline text-lg break-all">
+          rkdalswjd0405@gmail.com
+        </a>
+      </div>
+      
+      <div className="bg-gray-50 p-6 rounded-lg shadow-md mb-8">
+        <h3 className="text-xl font-semibold mb-4 flex items-center text-gray-800">
+          <Info className="mr-2 text-blue-600" /> 센터 소개
+        </h3>
+        <p className="text-gray-600">
+          세상에서 침대를 좋아하는 개발자 1명이 만든 사이트입니다. 위 사이트는 수익 창출 하지 않으며, 앞으로도 수익 창출 계획이 없습니다. 개발자를 돕는 방법은 불법 웹툰 사이트 이용 자제입니다!
+        </p>
+      </div>
+      
+      <div className="bg-purple-50 p-6 rounded-lg shadow-md mb-8">
+        <h3 className="text-xl font-semibold mb-4 flex items-center text-purple-700">
+          <Code className="mr-2" /> 웹툰 관련 진행중인 프로젝트
+        </h3>
+        <ul className="space-y-3">
+          <li className="flex items-center">
+            <LinkIcon className="mr-2 text-purple-600" />
+            <a href="https://www.wavvetoon4.com/" className="text-purple-600 hover:underline">베드로 프로젝트</a>
+          </li>
+          <li className="flex items-start">
+            <GamepadIcon className="mr-2 mt-1 text-purple-600" />
+            <div>
+              웹툰 방지 캠페인용 게임제작
+              <ul className="list-disc list-inside ml-4 mt-2 space-y-1 text-gray-600">
+                <li>웹툰 작가로 살아남기 (개발중)</li>
+                <li>발더스 게이트3 : 위조된 세계 (개발중)</li>
+              </ul>
             </div>
-            <div className="md:w-1/3">
-              <figure className="relative">
-                <Image src="/images/2.png" alt="고객 지원" width={400} height={300} className="rounded-lg shadow-sm" />
-                <figcaption className="mt-2 text-sm text-center text-gray-600">고객 지원 센터</figcaption>
-              </figure>
-            </div>
-          </div>
-        </section>
-      </main>
+          </li>
+        </ul>
+      </div>
 
-      <footer className="bg-gray-800 text-white text-center p-4 md:p-8 mt-12">
-        <div className="container mx-auto">
-          <p className="mb-4 text-sm md:text-base">&copy; 2024 불법 웹툰 웹소설 대응 센터. All rights reserved. 문의하기 : rkdalswjd0405@gmail.com</p>
-          <div className="flex justify-center space-x-4 text-sm md:text-base">
-            <a href="#" className="hover:text-blue-300 transition duration-300">개인정보 처리방침</a>
-            <a href="#" className="hover:text-blue-300 transition duration-300">이용약관</a>
-            <a href="#" className="hover:text-blue-300 transition duration-300">사이트맵</a>
-          </div>
-        </div>
-      </footer>
+      <div className="bg-yellow-50 p-6 rounded-lg shadow-md">
+        <h3 className="text-xl font-semibold mb-4 flex items-center text-yellow-700">
+          <Users className="mr-2" /> 작가님들에게 전하고 싶은 말
+        </h3>
+        <p className="text-gray-700 leading-relaxed">
+          제 인생에 대해 고민하는 것보다 작가님들이 그려주신 작품을 곱씹어보는 게 인생이 바람직하다는 걸 깨달았습니다. 건강 잘 챙겨주시고 돈 많이 버세요. 여러분의 작품이 우리의 삶을 풍요롭게 만듭니다.
+        </p>
+      </div>
     </div>
+    
+    <div>
+      <figure className="sticky top-20">
+        <Image 
+          src="/images/2.png" 
+          alt="고객 지원" 
+          width={500} 
+          height={375} 
+          className="rounded-lg shadow-lg" 
+        />
+        <figcaption className="mt-2 text-sm text-center text-gray-600">스폰지밥의 뚱이</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer className="bg-gray-800 text-white text-center p-4 md:p-8 mt-12">
+  <div className="container mx-auto">
+    <p className="mb-4 text-sm md:text-base">&copy; 2024 불법 웹툰 웹소설 대응 센터. All rights reserved. 문의하기 : rkdalswjd0405@gmail.com</p>
+    <div className="flex justify-center space-x-4 text-sm md:text-base">
+      <a href="#" className="hover:text-blue-300 transition duration-300">개인정보 처리방침</a>
+      <a href="#" className="hover:text-blue-300 transition duration-300">이용약관</a>
+      <a href="#" className="hover:text-blue-300 transition duration-300">사이트맵</a>
+    </div>
+  </div>
+</footer>
+</div>
   )
 }
