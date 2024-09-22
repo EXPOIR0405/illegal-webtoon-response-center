@@ -14,10 +14,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ko">
       <head>
-        {/* Google Analytics 4 */}
+        {/* Google Analytics 4 (gtag.js) 추가 */}
         <Script
           strategy="afterInteractive"
-          src={`https://www.googletagmanager.com/gtag/js?id=G-F18W5EQVT5`}
+          src="https://www.googletagmanager.com/gtag/js?id=G-F18W5EQVT5"
         />
         <Script
           id="google-analytics"
@@ -27,9 +27,7 @@ export default function RootLayout({ children }) {
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', 'G-F18W5EQVT5', {
-                page_path: window.location.pathname,
-              });
+              gtag('config', 'G-F18W5EQVT5');
             `,
           }}
         />
